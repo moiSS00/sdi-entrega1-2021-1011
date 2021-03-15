@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Offer {
@@ -17,14 +19,23 @@ public class Offer {
 	private String description;
 	private LocalDate creationDate;
 	private Double price;
+	private Boolean buyed; 
+	
+	@ManyToOne
+	@JoinColumn(name = "owner_id")
+	private User owner; 
+	
+	@ManyToOne
+	@JoinColumn(name = "buyer_id")
+	private User buyer; 
 
-	public Offer(Long id, String title, String description, LocalDate creationDate, Double price) {
+	public Offer(String title, String description,Double price, User owner) {
 		super();
-		this.id = id;
 		this.title = title;
 		this.description = description;
-		this.creationDate = creationDate;
 		this.price = price;
+		this.owner = owner; 
+		this.creationDate = LocalDate.now();
 	}
 
 	public Offer() {
@@ -71,4 +82,29 @@ public class Offer {
 		this.id = id;
 	}
 
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+	public User getBuyer() {
+		return buyer;
+	}
+
+	public void setBuyer(User buyer) {
+		this.buyer = buyer;
+	}
+
+	public Boolean getBuyed() {
+		return buyed;
+	}
+
+	public void setBuyed(Boolean buyed) {
+		this.buyed = buyed;
+	}
+
+	
 }
