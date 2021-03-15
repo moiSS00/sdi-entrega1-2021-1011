@@ -20,20 +20,28 @@ public class InsertSampleDataService {
 	@Autowired
 	private OffersService offersService; 
 	
+	@Autowired
+	private RolesService rolesService;
+	
 	@PostConstruct
 	public void init() {
 		
 		//Creación de 5 usuarios y se añaden a la base de datos
 		User user1 = new User("correo1@prueba.com", "Nombre1", "Apellido1"); 
 		user1.setPassword("123456");
+		user1.setRole(rolesService.getRoles()[0]);
 		User user2 = new User("correo2@prueba.com", "Nombre2", "Apellido2");
 		user2.setPassword("123456");
+		user2.setRole(rolesService.getRoles()[0]);
 		User user3 = new User("correo3@prueba.com", "Nombre3", "Apellido3"); 
 		user3.setPassword("123456");
+		user3.setRole(rolesService.getRoles()[0]);
 		User user4 = new User("correo4@prueba.com", "Nombre4", "Apellido4");
 		user4.setPassword("123456");
+		user4.setRole(rolesService.getRoles()[1]);
 		User user5 = new User("correo5@prueba.com", "Nombre5", "Apellido5");
 		user5.setPassword("123456");
+		user5.setRole(rolesService.getRoles()[1]);
 		
 		usersService.addUser(user1);
 		usersService.addUser(user2);
