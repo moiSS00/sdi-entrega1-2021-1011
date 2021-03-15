@@ -8,8 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
+@Table(name = "user")
 public class User {
 	
 	@Id
@@ -21,6 +24,10 @@ public class User {
 	
 	private String name; 
 	private String lastName;
+	private String password; 
+	
+	@Transient
+	private String passwordConfirm; 
 	
 	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
 	private Set<Offer> ownOffers; 
@@ -85,6 +92,22 @@ public class User {
 
 	public void setPurchasedOffers(Set<Offer> purchasedOffers) {
 		this.purchasedOffers = purchasedOffers;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPasswordConfirm() {
+		return passwordConfirm;
+	}
+
+	public void setPasswordConfirm(String passwordConfirm) {
+		this.passwordConfirm = passwordConfirm;
 	}
 
 	
