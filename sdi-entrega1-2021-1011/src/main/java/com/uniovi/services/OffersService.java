@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.uniovi.entities.Offer;
+import com.uniovi.entities.User;
 import com.uniovi.repositories.OffersRepository;
 
 @Service
@@ -19,6 +20,10 @@ public class OffersService {
 		List<Offer> offers = new ArrayList<Offer>(); 
 		offersRepository.findAll().forEach(offers::add);
 		return offers; 
+	}
+	
+	public List<Offer> getOffersOfUser(User user) {
+		return offersRepository.findAllByOwner(user);
 	}
 	
 	public void addOffer(Offer offer) {
