@@ -1,6 +1,5 @@
 package com.uniovi.entities;
 
-import java.security.acl.Owner;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
