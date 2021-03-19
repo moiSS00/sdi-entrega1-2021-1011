@@ -20,10 +20,9 @@ public class UsersController {
 
 	@Autowired
 	private SecurityService securityService;
-	
+
 	@Autowired
 	private RolesService rolesService;
-
 
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String signup() {
@@ -31,21 +30,27 @@ public class UsersController {
 	}
 
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public String signup(@ModelAttribute("user") User user, Model model) {
+	public String signup(@ModelAttribute("user") User user) {
 		user.setRole(rolesService.getRoles()[0]);
-		usersService.addUser(user,true);
+		usersService.addUser(user, true);
 		securityService.autoLogin(user.getEmail(), user.getPasswordConfirm());
 		return "redirect:home";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(Model model) {
+	public String login() {
 		return "login";
 	}
 
 	@RequestMapping(value = { "/home" }, method = RequestMethod.GET)
-	public String home(Model model) {
+	public String home() {
 		return "home";
+	}
+	
+	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
+	public String getUsersList(Model model) {
+		model.addAttribute("usersList", usersService.getUsers()); 
+		return "user/list";
 	}
 
 }

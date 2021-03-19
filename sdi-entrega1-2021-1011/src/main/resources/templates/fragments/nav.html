@@ -13,24 +13,24 @@
 			<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
 				<li><a href="/">Home</a></li>
 				<li id="marks-menu" class="dropdown"
-				sec:authorize="hasRole('ROLE_STANDARD')"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#"> Gestión de ofertas <span
-						class="caret"></span>
+					sec:authorize="hasRole('ROLE_STANDARD')"><a
+					class="dropdown-toggle" data-toggle="dropdown" href="#">
+						Gestión de ofertas <span class="caret"></span>
 				</a>
 					<ul class="dropdown-menu">
 						<li><a href="/offer/ownedList">Lista de ofertas propias</a></li>
-						<li><a href="/offer/purchasedList">Lista de ofertas compradas</a></li>
+						<li><a href="/offer/purchasedList">Lista de ofertas
+								compradas</a></li>
 					</ul></li>
 				<li id="users-menu" class="dropdown"
-				sec:authorize="hasRole('ROLE_ADMIN')"><a
+					sec:authorize="hasRole('ROLE_ADMIN')"><a
 					class="dropdown-toggle" data-toggle="dropdown" href="#">
 						Gestión de usuarios <span class="caret"></span>
 				</a>
 					<ul class="dropdown-menu">
-						<li><a href="/user/add">Op 1</a></li>
-						<li><a href="user/list">Op 2</a></li>
+						<li><a href="/user/list">Lista de usuarios</a></li>
+						<li><a href="">Op 2</a></li>
 					</ul></li>
-
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a id="btnLanguage" href="#"

@@ -17,7 +17,7 @@ public class Offer {
 	
 	private String title;
 	private String description;
-	private LocalDate creationDate;
+	private LocalDate creationDate = LocalDate.now();
 	private Double price;
 	
 	@ManyToOne
@@ -34,7 +34,6 @@ public class Offer {
 		this.description = description;
 		this.price = price; 
 		this.owner = owner; 
-		this.creationDate = LocalDate.now();
 	}
 
 	public Offer() {

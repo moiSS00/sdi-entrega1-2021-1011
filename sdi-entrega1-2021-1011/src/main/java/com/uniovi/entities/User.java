@@ -25,6 +25,7 @@ public class User {
 
 	private String name;
 	private String lastName;
+	private Double amount = 100.0;  
 	private String password;
 	private String role;
 
@@ -120,4 +121,12 @@ public class User {
 		this.role = role;
 	}
 
+	public Double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+	
 }
