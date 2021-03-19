@@ -36,7 +36,6 @@ public class OffersController {
 	public String getPurchasedList(Model model, Principal principal) {
 		String email = principal.getName();
 		User user = usersService.getUserByEmail(email);
-		System.out.println(offersService.getPurchasedOffers(user).size());
 		model.addAttribute("offersList",offersService.getPurchasedOffers(user)); 
 		return "offer/purchasedList"; 
 	}

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head th:replace="fragments/head"/>
+<head th:replace="fragments/head" />
 <body>
 
-<nav th:replace="fragments/nav"/>
-
-	<div class="container">
+	<nav th:replace="fragments/nav" />
+	<div th:replace="fragments/userInformation" />
+	
+		<div class="container">
 		<h2>Lista de ofertas</h2>
 		<p>Las ofertas que actualmente figuran en el sistema son las
 			siguientes:</p>
@@ -28,6 +29,6 @@
 			</table>
 		</div>
 	</div>
-<footer th:replace="fragments/footer"/>
+<footer th:replace="fragments/footer" />
 </body>
 </html>

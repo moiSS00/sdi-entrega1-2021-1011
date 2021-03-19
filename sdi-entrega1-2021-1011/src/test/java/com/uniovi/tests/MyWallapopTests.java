@@ -1,5 +1,9 @@
 package com.uniovi.tests;
 
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -9,9 +13,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.uniovi.tests.pageobjects.PO_Properties;
+import com.uniovi.tests.pageobjects.PO_RegisterView;
+import com.uniovi.tests.pageobjects.PO_View;
+import com.uniovi.tests.util.SeleniumUtils;
+
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 //Ordenamos las pruebas por el nombre del método
@@ -58,9 +69,76 @@ public class MyWallapopTests {
 		driver.quit();
 	}
 
-	// PR01. Acceder a la página principal /
+	// PR01. Registro de usuario con datos validos./
 	@Test
 	public void PR01() {
-		driver.findElement(By.id("prueba")); 
+
+		// Vamos al formulario de registro
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/signup");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Rellenamos el formulario con datos validos
+		PO_RegisterView.fillForm(driver, "prueba@com", "prueba", "prueba", "123456", "123456");
+		PO_View.checkElement(driver, "text", "prueba@com");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
 	}
+
+	// PR02. Registro de Usuario con datos inválidos (email vacío, nombre vacío,
+	// apellidos vacíos)./
+	@Test
+	public void PR02() {
+
+		// Vamos al formulario de registro
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/signup");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Email vacío
+		PO_RegisterView.fillForm(driver, "", "prueba", "prueba", "123456", "123456");
+		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
+
+		// Nombre vacío
+		PO_RegisterView.fillForm(driver, "prueba@com", "", "prueba", "123456", "123456");
+		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
+
+		// Apellidos vacíos
+		PO_RegisterView.fillForm(driver, "prueba@com", "prueba", "", "123456", "123456");
+		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
+
+	}
+
+	// PR03.Registro de Usuario con datos inválidos (repetición de contraseña
+	// inválida).
+	@Test
+	public void PR03() {
+
+		// Vamos al formulario de registro
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/signup");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Rellenamos el formulario con contraseñas distitnas
+		PO_RegisterView.fillForm(driver, "prueba@com", "prueba", "prueba", "123456", "1234567");
+		SeleniumUtils.textoPresentePagina(driver, "Las contraseñas deben coincidir.");
+	}
+
+	// PR04.Registro de Usuario con datos inválidos (email existente).
+	@Test
+	public void PR04() {
+
+		// Vamos al formulario de registro
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/signup");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Rellenamos el formulario con un email ya existente
+		PO_RegisterView.fillForm(driver, "correo1@prueba.com", "prueba", "prueba", "123456", "123456");
+		SeleniumUtils.textoPresentePagina(driver, "Ya existe un usuario con este email.");
+	}
+
 }
