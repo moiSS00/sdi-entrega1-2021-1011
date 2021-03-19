@@ -1,5 +1,6 @@
 package com.uniovi.entities;
 
+import java.security.acl.Owner;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
@@ -19,10 +20,9 @@ public class Offer {
 	private String description;
 	private LocalDate creationDate;
 	private Double price;
-	private Boolean buyed; 
 	
 	@ManyToOne
-	@JoinColumn(name = "owner_id")
+	@JoinColumn(name = "owner_id", nullable = false)
 	private User owner; 
 	
 	@ManyToOne
@@ -33,7 +33,7 @@ public class Offer {
 		super();
 		this.title = title;
 		this.description = description;
-		this.price = price;
+		this.price = price; 
 		this.owner = owner; 
 		this.creationDate = LocalDate.now();
 	}
@@ -96,14 +96,6 @@ public class Offer {
 
 	public void setBuyer(User buyer) {
 		this.buyer = buyer;
-	}
-
-	public Boolean getBuyed() {
-		return buyed;
-	}
-
-	public void setBuyed(Boolean buyed) {
-		this.buyed = buyed;
 	}
 
 	

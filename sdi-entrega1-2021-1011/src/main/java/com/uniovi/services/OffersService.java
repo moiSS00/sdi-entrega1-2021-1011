@@ -26,6 +26,10 @@ public class OffersService {
 		return offersRepository.findAllByOwner(user);
 	}
 	
+	public List<Offer> getPurchasedOffers(User user) {
+		return offersRepository.findAllByBuyer(user); 
+	}
+	
 	public void addOffer(Offer offer) {
 		offersRepository.save(offer); 
 	}

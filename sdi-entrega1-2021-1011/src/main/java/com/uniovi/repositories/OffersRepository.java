@@ -12,5 +12,7 @@ import com.uniovi.entities.User;
 public interface OffersRepository extends CrudRepository<Offer,Long> {
 	
 	List<Offer> findAllByOwner(User owner); 
+	
+	List<Offer> findAllByBuyer(User buyer);
 
 }

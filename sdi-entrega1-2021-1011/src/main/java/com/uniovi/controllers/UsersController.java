@@ -33,7 +33,7 @@ public class UsersController {
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String signup(@ModelAttribute("user") User user, Model model) {
 		user.setRole(rolesService.getRoles()[0]);
-		usersService.addUser(user);
+		usersService.addUser(user,true);
 		securityService.autoLogin(user.getEmail(), user.getPasswordConfirm());
 		return "redirect:home";
 	}

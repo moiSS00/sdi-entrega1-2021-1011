@@ -24,13 +24,21 @@ public class OffersController {
 	private UsersService usersService; 
 	
 
-	@RequestMapping(value = "/offer/privateList", method = RequestMethod.GET)
-	public String getList(Model model, Principal principal) {
+	@RequestMapping(value = "/offer/ownedList", method = RequestMethod.GET)
+	public String getOwnedList(Model model, Principal principal) {
 		String email = principal.getName();
-		System.out.println("Email: " + email); 
 		User user = usersService.getUserByEmail(email); 
-		model.addAttribute(offersService.getOffersOfUser(user)); 
-		return "offer/privateList"; 
+		model.addAttribute("offersList",offersService.getOffersOfUser(user)); 
+		return "offer/ownedList"; 
+	}
+	
+	@RequestMapping(value = "/offer/purchasedList", method = RequestMethod.GET)
+	public String getPurchasedList(Model model, Principal principal) {
+		String email = principal.getName();
+		User user = usersService.getUserByEmail(email);
+		System.out.println(offersService.getPurchasedOffers(user).size());
+		model.addAttribute("offersList",offersService.getPurchasedOffers(user)); 
+		return "offer/purchasedList"; 
 	}
 	
 	@RequestMapping(value = "/offer/add", method = RequestMethod.GET)
