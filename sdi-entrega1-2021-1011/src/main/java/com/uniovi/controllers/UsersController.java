@@ -1,11 +1,14 @@
 package com.uniovi.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -65,8 +68,15 @@ public class UsersController {
 	
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
 	public String getUsersList(Model model) {
-		model.addAttribute("usersList", usersService.getUsers()); 
+		model.addAttribute("usersList", usersService.getAllUsersxceptAdmin()); 
 		return "user/list";
+	}
+		
+	@RequestMapping(value = "/user/list/update/{ids}", method = RequestMethod.GET)
+	public String updateUsersList(Model model, @PathVariable List<Long> ids) {
+		usersService.removeUsers(ids);
+		model.addAttribute("usersList", usersService.getAllUsersxceptAdmin()); 
+		return "user/list :: tableUsers";
 	}
 
 }
