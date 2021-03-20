@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.uniovi.repositories.UsersRepository;
 import com.uniovi.services.InsertSampleDataService;
+import com.uniovi.tests.pageobjects.PO_AddOfferView;
 import com.uniovi.tests.pageobjects.PO_LoginView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_RegisterView;
@@ -129,6 +130,14 @@ public class MyWallapopTests {
 
 		// Apellidos vacíos
 		PO_RegisterView.fillForm(driver, "pueba@email.com", "prueba", "", "123456", "123456");
+		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
+
+		// Password vacía
+		PO_RegisterView.fillForm(driver, "pueba@email.com", "prueba", "prueba", "", "123456");
+		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
+
+		// Password confirm vacía
+		PO_RegisterView.fillForm(driver, "pueba@email.com", "prueba", "prueba", "123456", "");
 		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
 	}
 
@@ -407,7 +416,8 @@ public class MyWallapopTests {
 		elements = PO_View.checkElement(driver, "@href", "/user/list");
 		elements.get(0).click();
 
-		// Seleccionamos el primer y ultimo usuario. Tambien seleccionamos uno intermedio
+		// Seleccionamos el primer y ultimo usuario. Tambien seleccionamos uno
+		// intermedio
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableUsers\"]/tbody/tr/td[4]/input");
 		assertTrue(elements.size() == 5);
 		elements.get(0).click();
@@ -426,6 +436,122 @@ public class MyWallapopTests {
 		SeleniumUtils.textoNoPresentePagina(driver, "correo3@email.com");
 		SeleniumUtils.textoNoPresentePagina(driver, "correo5@email.com");
 
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR16. Ir al formulario de alta de oferta, rellenarla con datos válidos y
+	// pulsar el botón Submit. Comprobar que la oferta sale en el listado de ofertas
+	// de dicho usuario.
+	@Test
+	public void PR16() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de dar de alta una nota
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/add");
+		elements.get(0).click();
+
+		// Rellenamos el formulario de alta de oferta con datos validos
+		PO_AddOfferView.fillForm(driver, "PruebaTitulo", "PruebaDescripcion", "0.21");
+
+		// Comprobamos que la oferta recien añadida sale en la lista de ofertas propias
+		// del usuario
+		PO_View.checkElement(driver, "text", "PruebaTitulo");
+		PO_View.checkElement(driver, "text", "PruebaDescripcion");
+		PO_View.checkElement(driver, "text", "0.21");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR17. Ir al formulario de alta de oferta, rellenarla con datos inválidos
+	// (campo título vacío) y pulsar el botón Submit. Comprobar que se muestra el
+	// mensaje de campo obligatorio.
+	@Test
+	public void PR17() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de dar de alta una nota
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/add");
+		elements.get(0).click();
+
+		// Título vacío
+		PO_AddOfferView.fillForm(driver, "", "PruebaDescripcion", "0.21");
+		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
+
+		// Descripción vacía
+		PO_AddOfferView.fillForm(driver, "PruebaTitulo", "", "0.21");
+		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
+
+		// Precio vacío
+		PO_AddOfferView.fillForm(driver, "PruebaTitulo", "PruebaDescripcion", "");
+		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
+
+		// Título demasiado corto
+		PO_AddOfferView.fillForm(driver, "Pru", "PruebaDescripcion", "0.21");
+		SeleniumUtils.textoPresentePagina(driver,
+				"El título debe de tener una longitud mínima de 5 carácteres y una longitud máxima de 20 carácteres.");
+
+		// Descripción demasiado corta
+		PO_AddOfferView.fillForm(driver, "PruebaTitulo", "Pru", "0.21");
+		SeleniumUtils.textoPresentePagina(driver,
+				"La descripción debe de tener una longitud mínima de 5 carácteres y una longitud máxima de 50 carácteres.");
+
+		// Precio negativo
+		PO_AddOfferView.fillForm(driver, "PruebaTitulo", "PruebaDescripcion", "-0.21");
+		SeleniumUtils.textoPresentePagina(driver, "El precio debe de ser un valor positivo.");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR18. Mostrar el listado de ofertas para dicho usuario y comprobar que se
+	// muestran todas los que existen para este usuario.
+	@Test
+	public void PR18() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de dar de alta una nota
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/ownedList");
+		elements.get(0).click();
+
+		// Comprobamos que estan todas las ofertas
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
+		assertTrue(elements.size() == 3);
+		
 		// Hacemos logout
 		elements = PO_View.checkElement(driver, "@href", "/logout");
 		assertTrue(elements.size() == 1);

@@ -31,7 +31,7 @@ public class AddOfferFormValidator implements Validator{
 			errors.rejectValue("title", "Error.title.length");
 		}
 		
-		if (offer.getTitle().length() < 5 || offer.getTitle().length() > 50) {
+		if (offer.getDescription().length() < 5 || offer.getDescription().length() > 50) {
 			errors.rejectValue("description", "Error.description.length");
 		} 
 		
