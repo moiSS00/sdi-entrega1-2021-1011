@@ -78,5 +78,6 @@ public class UsersController {
 		model.addAttribute("usersList", usersService.getAllUsersxceptAdmin()); 
 		return "user/list :: tableUsers";
 	}
+	
 
 }

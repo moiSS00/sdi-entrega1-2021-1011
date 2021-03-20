@@ -1,8 +1,12 @@
 package com.uniovi.controllers;
 
 import java.security.Principal;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uniovi.entities.Offer;
 import com.uniovi.entities.User;
@@ -25,9 +30,23 @@ public class OffersController {
 
 	@Autowired
 	private UsersService usersService;
-	
+
 	@Autowired
-	private AddOfferFormValidator addOfferFormValidator; 
+	private AddOfferFormValidator addOfferFormValidator;
+
+	@RequestMapping(value = "/offer/searchList", method = RequestMethod.GET)
+	public String getOwnedList(Model model, Pageable pageable,
+			@RequestParam(value = "", required = false) String searchText) {
+		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>()); 
+		if (searchText != null && !searchText.isEmpty()) {
+			offers = offersService.searchOffersByTitle(pageable, searchText);
+		} else {
+			offers = offersService.getOffers(pageable);
+		}
+		model.addAttribute("offersList", offers.getContent());
+		model.addAttribute("page", offers);
+		return "offer/searchList";
+	}
 
 	@RequestMapping(value = "/offer/ownedList", method = RequestMethod.GET)
 	public String getOwnedList(Model model, Principal principal) {
@@ -54,7 +73,7 @@ public class OffersController {
 	@RequestMapping(value = "/offer/add", method = RequestMethod.POST)
 	public String setOffer(@ModelAttribute @Validated Offer offer, Principal principal, BindingResult result) {
 		addOfferFormValidator.validate(offer, result);
-		System.out.println(offer.getDescription()); 
+		System.out.println(offer.getDescription());
 		if (result.hasErrors()) {
 			return "offer/add";
 		}

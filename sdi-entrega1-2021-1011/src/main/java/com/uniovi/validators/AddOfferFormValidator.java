@@ -35,7 +35,6 @@ public class AddOfferFormValidator implements Validator{
 			errors.rejectValue("description", "Error.description.length");
 		} 
 		
-		System.out.println("Prueba:" + offer.getDescription()); 
 		
 		if(offer.getPrice() != null) {
 			if (offer.getPrice() < 0) {
