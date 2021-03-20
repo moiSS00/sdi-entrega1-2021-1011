@@ -14,7 +14,8 @@ import com.uniovi.repositories.OffersRepository;
 public class OffersService {
 	
 	@Autowired
-	private OffersRepository offersRepository; 
+	private OffersRepository offersRepository;
+	
 	
 	public List<Offer> getOffers() {
 		List<Offer> offers = new ArrayList<Offer>(); 
@@ -29,7 +30,7 @@ public class OffersService {
 	public List<Offer> getPurchasedOffers(User user) {
 		return offersRepository.findAllByBuyer(user); 
 	}
-	
+		
 	public void addOffer(Offer offer) {
 		offersRepository.save(offer); 
 	}

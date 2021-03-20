@@ -36,11 +36,11 @@ public class SignUpFormValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwordConfirm", "Error.empty");
 
 		if (!user.getPasswordConfirm().equals(user.getPassword())) {
-			errors.rejectValue("passwordConfirm", "Error.coincidence");
+			errors.rejectValue("passwordConfirm", "Error.password.coincidence");
 		}
 
 		if (usersService.getUserByEmail(user.getEmail()) != null) {
-			errors.rejectValue("email", "Error.exist");
+			errors.rejectValue("email", "Error.email.exist");
 		}
 
 	}
