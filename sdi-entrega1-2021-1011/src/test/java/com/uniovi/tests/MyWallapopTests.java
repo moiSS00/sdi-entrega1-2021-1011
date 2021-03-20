@@ -11,9 +11,12 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.uniovi.repositories.UsersRepository;
+import com.uniovi.services.InsertSampleDataService;
 import com.uniovi.tests.pageobjects.PO_LoginView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_RegisterView;
@@ -32,6 +35,12 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 @SpringBootTest
 public class MyWallapopTests {
 
+	@Autowired
+	private UsersRepository usersRepository;
+
+	@Autowired
+	private InsertSampleDataService insertSampleDataService;
+
 	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
 	static String Geckdriver024 = "C:\\Users\\Moises\\Desktop\\UNIVERSIDAD\\TERCERO\\"
 			+ "2 CUATRIMESTRE\\SDI\\Laboratorio\\PL5\\PL-SDI-Sesión5-material\\geckodriver024win64.exe";
@@ -46,10 +55,21 @@ public class MyWallapopTests {
 		return driver;
 	}
 
-	// Antes de cada prueba se navega al URL home de la aplicación
+	// Antes de cada prueba se navega al URL home de la aplicación y se
+	// reinicia la base de datos
 	@Before
 	public void setUp() {
 		driver.navigate().to(URL);
+		initb();
+	}
+
+	// Reinicia la base de datos
+	public void initb() {
+		// Borramos todas las entidades
+		usersRepository.deleteAll();
+
+		// Metemos otra vez los datos iniciales de prueba
+		insertSampleDataService.init();
 	}
 
 	// Después de cada prueba se borran las cookies del navegador
@@ -234,10 +254,10 @@ public class MyWallapopTests {
 		PO_View.checkElement(driver, "text", "Identifícate");
 	}
 
-	// PR010. Hacer click en la opción de salir de sesión y comprobar que se
+	// PR10. Hacer click en la opción de salir de sesión y comprobar que se
 	// redirige a la página de inicio de sesión (Login).
 	@Test
-	public void PR010() {
+	public void PR10() {
 
 		// Vamos al formulario de inicio de sesion
 		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
@@ -256,13 +276,160 @@ public class MyWallapopTests {
 		PO_View.checkElement(driver, "text", "¡ Bienvenidos a MyWallapop !");
 	}
 
-	// PR011. Comprobar que el botón cerrar sesión no está visible si el usuario no
+	// PR11. Comprobar que el botón cerrar sesión no está visible si el usuario no
 	// está autenticado.
 	@Test
-	public void PR011() {
+	public void PR11() {
 
 		// Comprobamos que el botón de inicio de cerrar sesión no es visible
 		SeleniumUtils.textoNoPresentePagina(driver, "Desconectar");
+	}
+
+	// PR12. Mostrar el listado de usuarios y comprobar que se muestran todos los
+	// que existen en el sistema.
+	@Test
+	public void PR12() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como administrador.
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+
+		// Ir a la lista de usuarios
+		elements = PO_View.checkElement(driver, "@href", "/user/list");
+		elements.get(0).click();
+
+		// Comprobamos que figuran todos los usuarios del sistema (Excepto el usuarios
+		// administrador,
+		// debido a las consideraciones importantes del requsito obligatorio 5)
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableUsers\"]/tbody/tr");
+		assertTrue(elements.size() == 5);
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR13. Ir a la lista de usuarios, borrar el primer usuario de la lista,
+	// comprobar que la lista se actualiza y que el usuario desaparece.
+	@Test
+	public void PR13() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como administrador.
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+
+		// Ir a la lista de usuarios
+		elements = PO_View.checkElement(driver, "@href", "/user/list");
+		elements.get(0).click();
+
+		// Seleccionamos el primer usuario que aparece
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableUsers\"]/tbody/tr/td[4]/input");
+		assertTrue(elements.size() == 5);
+		elements.get(0).click();
+
+		// Damos al botón correspondiente para eliminar a los usuarios seleccionados
+		elements = PO_View.checkElement(driver, "class", "btn");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Comprobamos que el usuario ya no figura en la tabla
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableUsers\"]/tbody/tr");
+		assertTrue(elements.size() == 4);
+		SeleniumUtils.textoNoPresentePagina(driver, "correo1@email.com");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR14. Ir a la lista de usuarios, borrar el último usuario de la lista,
+	// comprobar que la lista se actualiza y que el usuario desaparece.
+	@Test
+	public void PR14() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como administrador.
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+
+		// Ir a la lista de usuarios
+		elements = PO_View.checkElement(driver, "@href", "/user/list");
+		elements.get(0).click();
+
+		// Seleccionamos el último usuario que aparece
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableUsers\"]/tbody/tr/td[4]/input");
+		assertTrue(elements.size() == 5);
+		elements.get(elements.size() - 1).click();
+
+		// Damos al botón correspondiente para eliminar a los usuarios seleccionados
+		elements = PO_View.checkElement(driver, "class", "btn");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Comprobamos que el usuario ya no figura en la tabla
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableUsers\"]/tbody/tr");
+		assertTrue(elements.size() == 4);
+		SeleniumUtils.textoNoPresentePagina(driver, "correo5@email.com");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR15. Ir a la lista de usuarios, borrar 3 usuarios, comprobar que la lista se
+	// actualiza y que los usuarios desaparecen.
+	@Test
+	public void PR15() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como administrador.
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+
+		// Ir a la lista de usuarios
+		elements = PO_View.checkElement(driver, "@href", "/user/list");
+		elements.get(0).click();
+
+		// Seleccionamos el primer y ultimo usuario. Tambien seleccionamos uno intermedio
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableUsers\"]/tbody/tr/td[4]/input");
+		assertTrue(elements.size() == 5);
+		elements.get(0).click();
+		elements.get(2).click();
+		elements.get(elements.size() - 1).click();
+
+		// Damos al botón correspondiente para eliminar a los usuarios seleccionados
+		elements = PO_View.checkElement(driver, "class", "btn");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Comprobamos que el usuario ya no figura en la tabla
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableUsers\"]/tbody/tr");
+		assertTrue(elements.size() == 2);
+		SeleniumUtils.textoNoPresentePagina(driver, "correo1@email.com");
+		SeleniumUtils.textoNoPresentePagina(driver, "correo3@email.com");
+		SeleniumUtils.textoNoPresentePagina(driver, "correo5@email.com");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
 	}
 
 }

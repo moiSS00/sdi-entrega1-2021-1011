@@ -39,9 +39,12 @@ public class InsertSampleDataService {
 		User user4 = new User("correo4@email.com", "Nombre4", "Apellido4");
 		user4.setPassword("1234567");
 		user4.setRole(rolesService.getRoles()[0]);
-		User user5 = new User("admin@email.com", "AdminName", "AdminLastName");
+		User user5 = new User("correo5@email.com", "Nombre5", "Apellido5");
 		user5.setPassword("admin");
-		user5.setRole(rolesService.getRoles()[1]);
+		user5.setRole(rolesService.getRoles()[0]);
+		User user6 = new User("admin@email.com", "AdminName", "AdminLastName");
+		user6.setPassword("admin");
+		user6.setRole(rolesService.getRoles()[1]);
 		
 		//Creacion de las ofertas
 		Offer offer1_1 = new Offer("Título1.1", "Descripción1.1", 1.1,user1);
@@ -104,6 +107,7 @@ public class InsertSampleDataService {
 		usersService.addUser(user3, true);
 		usersService.addUser(user4, true);
 		usersService.addUser(user5, true);	
+		usersService.addUser(user6, true);
 
 		//Se compran algunas ofertas 
 		buy(user1, offer2_1);
