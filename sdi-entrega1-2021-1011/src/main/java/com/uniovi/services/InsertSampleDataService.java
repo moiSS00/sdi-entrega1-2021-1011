@@ -62,7 +62,7 @@ public class InsertSampleDataService {
 		
 		Offer offer5_1 = new Offer("Título5.1", "Descripción5.1", 5.1,user5); 
 		Offer offer5_2 = new Offer("Título5.2", "Descripción5.2", 5.2,user5); 
-		Offer offer5_3 = new Offer("Título5.3", "Descripción5.3", 5.3,user5);
+		Offer offer5_3 = new Offer("Título5.3", "Descripción5.3", 200.0,user5);
 		
 		
 		//Inicializo colecciones necesarias

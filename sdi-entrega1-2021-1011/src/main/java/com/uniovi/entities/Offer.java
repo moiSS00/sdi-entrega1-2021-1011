@@ -69,6 +69,7 @@ public class Offer {
 	}
 
 	public void setPrice(Double price) {
+		price = Math.round(price*100.0)/100.0;
 		this.price = price;
 	}
 

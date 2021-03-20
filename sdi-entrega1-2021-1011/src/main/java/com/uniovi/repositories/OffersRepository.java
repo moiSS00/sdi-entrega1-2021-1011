@@ -18,9 +18,10 @@ public interface OffersRepository extends CrudRepository<Offer, Long> {
 
 	List<Offer> findAllByBuyer(User buyer);
 
-	@Query("SELECT o from Offer o WHERE o.title like ?1 ORDER BY o.creationDate DESC")
-	Page<Offer> searchByTitle(Pageable pageable, String title);
-	
-	Page<Offer> findAll(Pageable pageable); 
+	@Query("SELECT o from Offer o WHERE o.owner.email != ?1 AND LOWER(o.title) like LOWER(?2) ORDER BY o.creationDate DESC")
+	Page<Offer> searchByTitle(Pageable pageable, String email, String title);
+
+	@Query("SELECT o from Offer o WHERE o.owner.email != ?1 ORDER BY o.creationDate DESC")
+	Page<Offer> findAllAvailableOffers(Pageable pageable, String email);
 
 }

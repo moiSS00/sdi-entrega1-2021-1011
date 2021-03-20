@@ -24,4 +24,8 @@ public class SessionSevice {
 		User registeredUser = usersService.getUserByEmail(email); 
 		httpSession.setAttribute("registeredUser", registeredUser);
 	}
+	
+	public void addBuyErrorToSession(boolean flag) {
+		httpSession.setAttribute("buyError", flag);
+	}
 }

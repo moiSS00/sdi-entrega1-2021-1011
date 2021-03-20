@@ -60,11 +60,12 @@ public class UsersController {
 		return "login";
 	}
 
-	@RequestMapping(value = { "/home" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String home() {
 		sessionService.loadRegisteredUser();
 		return "home";
 	}
+	
 	
 	@RequestMapping(value = "/user/list", method = RequestMethod.GET)
 	public String getUsersList(Model model) {

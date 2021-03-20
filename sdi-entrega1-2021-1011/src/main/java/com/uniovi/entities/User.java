@@ -126,6 +126,7 @@ public class User {
 	}
 
 	public void setAmount(Double amount) {
+		amount = Math.round(amount*100.0)/100.0;
 		this.amount = amount;
 	}
 	
