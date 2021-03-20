@@ -27,16 +27,16 @@ public class InsertSampleDataService {
 	public void init() {
 		
 		//Creación de 5 usuarios
-		User user1 = new User("correo1@prueba.com", "Nombre1", "Apellido1"); 
+		User user1 = new User("correo1@email.com", "Nombre1", "Apellido1"); 
 		user1.setPassword("1234567");
 		user1.setRole(rolesService.getRoles()[0]);
-		User user2 = new User("correo2@prueba.com", "Nombre2", "Apellido2");
+		User user2 = new User("correo2@email.com", "Nombre2", "Apellido2");
 		user2.setPassword("1234567");
 		user2.setRole(rolesService.getRoles()[0]);
-		User user3 = new User("correo3@prueba.com", "Nombre3", "Apellido3"); 
+		User user3 = new User("correo3@email.com", "Nombre3", "Apellido3"); 
 		user3.setPassword("1234567");
 		user3.setRole(rolesService.getRoles()[0]);
-		User user4 = new User("correo4@prueba.com", "Nombre4", "Apellido4");
+		User user4 = new User("correo4@email.com", "Nombre4", "Apellido4");
 		user4.setPassword("1234567");
 		user4.setRole(rolesService.getRoles()[0]);
 		User user5 = new User("admin@email.com", "AdminName", "AdminLastName");

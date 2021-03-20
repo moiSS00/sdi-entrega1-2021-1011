@@ -35,6 +35,7 @@ public class SignUpFormValidator implements Validator {
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwordConfirm", "Error.empty");
 
+		
 		if (!user.getPasswordConfirm().equals(user.getPassword())) {
 			errors.rejectValue("passwordConfirm", "Error.password.coincidence");
 		}

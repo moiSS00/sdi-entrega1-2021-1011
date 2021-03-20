@@ -80,8 +80,8 @@ public class MyWallapopTests {
 		elements.get(0).click();
 
 		// Rellenamos el formulario con datos validos
-		PO_RegisterView.fillForm(driver, "prueba@com", "prueba", "prueba", "123456", "123456");
-		PO_View.checkElement(driver, "text", "prueba@com");
+		PO_RegisterView.fillForm(driver, "pueba@email.com", "prueba", "prueba", "123456", "123456");
+		PO_View.checkElement(driver, "text", "pueba@email.com");
 
 		// Hacemos logout
 		elements = PO_View.checkElement(driver, "@href", "/logout");
@@ -104,13 +104,12 @@ public class MyWallapopTests {
 		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
 
 		// Nombre vacío
-		PO_RegisterView.fillForm(driver, "prueba@com", "", "prueba", "123456", "123456");
+		PO_RegisterView.fillForm(driver, "pueba@email.com", "", "prueba", "123456", "123456");
 		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
 
 		// Apellidos vacíos
-		PO_RegisterView.fillForm(driver, "prueba@com", "prueba", "", "123456", "123456");
+		PO_RegisterView.fillForm(driver, "pueba@email.com", "prueba", "", "123456", "123456");
 		SeleniumUtils.textoPresentePagina(driver, "Este campo no se puede dejar vacío.");
-
 	}
 
 	// PR03.Registro de Usuario con datos inválidos (repetición de contraseña
@@ -124,7 +123,7 @@ public class MyWallapopTests {
 		elements.get(0).click();
 
 		// Rellenamos el formulario con contraseñas distitnas
-		PO_RegisterView.fillForm(driver, "prueba@com", "prueba", "prueba", "123456", "1234567");
+		PO_RegisterView.fillForm(driver, "pueba@email.com", "prueba", "prueba", "123456", "1234567");
 		SeleniumUtils.textoPresentePagina(driver, "Las contraseñas deben coincidir.");
 	}
 
@@ -138,7 +137,7 @@ public class MyWallapopTests {
 		elements.get(0).click();
 
 		// Rellenamos el formulario con un email ya existente
-		PO_RegisterView.fillForm(driver, "correo1@prueba.com", "prueba", "prueba", "123456", "123456");
+		PO_RegisterView.fillForm(driver, "correo1@email.com", "prueba", "prueba", "123456", "123456");
 		SeleniumUtils.textoPresentePagina(driver, "Ya existe un usuario con este email.");
 	}
 
@@ -171,8 +170,8 @@ public class MyWallapopTests {
 		elements.get(0).click();
 
 		// Introducimos los datos de la cuenta de administrador
-		PO_LoginView.fillForm(driver, "correo1@prueba.com", "1234567");
-		PO_View.checkElement(driver, "text", "correo1@prueba.com");
+		PO_LoginView.fillForm(driver, "correo4@email.com", "1234567");
+		PO_View.checkElement(driver, "text", "correo4@email.com");
 
 		// Hacemos logout
 		elements = PO_View.checkElement(driver, "@href", "/logout");
@@ -190,9 +189,13 @@ public class MyWallapopTests {
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
 
-		// Dejamos ambos campos vacíos
+		// Dejamos ambos campos vacíos y comprobamos que se despliega el mensaje de
+		// error
+		// y segimos en el formulario de login.
 		PO_LoginView.fillForm(driver, "", "");
-		PO_View.checkElement(driver, "text", "Idéntificate");
+		elements = PO_View.checkElement(driver, "class", "alert");
+		assertTrue(elements.size() == 1);
+		PO_View.checkElement(driver, "text", "Identifícate");
 	}
 
 	// PR08.Inicio de sesión con datos válidos (usuario estándar, email existente,
@@ -205,9 +208,12 @@ public class MyWallapopTests {
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
 
-		// Dejamos ambos campos vacíos
-		PO_LoginView.fillForm(driver, "correo1@prueba.com", "incorrecto");
-		PO_View.checkElement(driver, "text", "Idéntificate");
+		// Utilizamos un email existente con una contraseña y comprobamos que se
+		// despliega el mensaje de error y segimos en el formulario de login.
+		PO_LoginView.fillForm(driver, "correo4@email.com", "incorrecto");
+		elements = PO_View.checkElement(driver, "class", "alert");
+		assertTrue(elements.size() == 1);
+		PO_View.checkElement(driver, "text", "Identifícate");
 	}
 
 	// PR09.Inicio de sesión con datos inválidos (usuario estándar, email no
@@ -220,9 +226,43 @@ public class MyWallapopTests {
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
 
-		// Dejamos ambos campos vacíos
+		// Utilizamos un email no existente en la aplicación y comprobamos que se
+		// despliega el mensaje de error y segimos en el formulario de login.
 		PO_LoginView.fillForm(driver, "correo6@prueba.com", "1234567");
-		PO_View.checkElement(driver, "text", "Idéntificate");
+		elements = PO_View.checkElement(driver, "class", "alert");
+		assertTrue(elements.size() == 1);
+		PO_View.checkElement(driver, "text", "Identifícate");
+	}
+
+	// PR010. Hacer click en la opción de salir de sesión y comprobar que se
+	// redirige a la página de inicio de sesión (Login).
+	@Test
+	public void PR010() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar.
+		PO_LoginView.fillForm(driver, "correo4@email.com", "1234567");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Comprobamos que estamos en la página de inicio
+		PO_View.checkElement(driver, "text", "¡ Bienvenidos a MyWallapop !");
+	}
+
+	// PR011. Comprobar que el botón cerrar sesión no está visible si el usuario no
+	// está autenticado.
+	@Test
+	public void PR011() {
+
+		// Comprobamos que el botón de inicio de cerrar sesión no es visible
+		SeleniumUtils.textoNoPresentePagina(driver, "Desconectar");
 	}
 
 }
