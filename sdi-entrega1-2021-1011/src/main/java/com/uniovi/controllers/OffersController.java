@@ -32,17 +32,17 @@ public class OffersController {
 
 	@Autowired
 	private UsersService usersService;
-	
+
 	@Autowired
-	private SessionSevice sessionService; 
+	private SessionSevice sessionService;
 
 	@Autowired
 	private AddOfferFormValidator addOfferFormValidator;
 
 	@RequestMapping(value = "/offer/searchList", method = RequestMethod.GET)
 	public String getOwnedList(Model model, Pageable pageable,
-			@RequestParam(value = "", required = false) String searchText) {	
-		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>()); 
+			@RequestParam(value = "", required = false) String searchText) {
+		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
 		if (searchText != null && !searchText.isEmpty()) {
 			offers = offersService.searchOffersByTitle(pageable, searchText);
 		} else {
@@ -88,23 +88,29 @@ public class OffersController {
 		offersService.addOffer(offer);
 		return "redirect:/offer/ownedList";
 	}
-	
+
 	@RequestMapping(value = "/offer/{id}/buy", method = RequestMethod.GET)
-	public String setOffer(Model model, @PathVariable Long id) { 
-		Offer offerToBuy = offersService.getOfferById(id); 
-		sessionService.addBuyErrorToSession(!offersService.buyOffer(offerToBuy));	
+	public String setOffer(Model model, @PathVariable Long id) {
+		Offer offerToBuy = offersService.getOfferById(id);
+		sessionService.addBuyErrorToSession(!offersService.buyOffer(offerToBuy));
 		return "redirect:/offer/searchList";
 	}
-	
-	@RequestMapping(value ="/userInformation/searchList/update" , method = RequestMethod.GET)
+
+	@RequestMapping(value = "/offer/delete/{id}", method = RequestMethod.GET)
+	public String deleteOffer(@PathVariable Long id) {
+		offersService.deleteOffer(id);
+		return "redirect:/offer/ownedList";
+	}
+
+	@RequestMapping(value = "/userInformation/searchList/update", method = RequestMethod.GET)
 	public String userInformationUpdate() {
 		sessionService.loadRegisteredUser();
 		return "offer/searchList :: userInformation";
 	}
-	
+
 	@RequestMapping(value = "/offer/searchList/update", method = RequestMethod.GET)
-	public String setOffer(Model model, Pageable pageable) { 
-		model.addAttribute("offersList", offersService.getAvailableOffers(pageable)); 
+	public String setOffer(Model model, Pageable pageable) {
+		model.addAttribute("offersList", offersService.getAvailableOffers(pageable));
 		return "offer/searchList :: tableSearchedOffers";
 	}
 }

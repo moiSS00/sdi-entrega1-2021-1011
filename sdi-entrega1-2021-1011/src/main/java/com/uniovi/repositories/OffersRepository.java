@@ -14,8 +14,10 @@ import com.uniovi.entities.User;
 @Repository
 public interface OffersRepository extends CrudRepository<Offer, Long> {
 
+	@Query("SELECT o from Offer o WHERE o.owner = ?1 ORDER BY o.creationDate DESC")
 	List<Offer> findAllByOwner(User owner);
 
+	@Query("SELECT o from Offer o WHERE o.buyer = ?1 ORDER BY o.title ASC")
 	List<Offer> findAllByBuyer(User buyer);
 
 	@Query("SELECT o from Offer o WHERE o.owner.email != ?1 AND LOWER(o.title) like LOWER(?2) ORDER BY o.creationDate DESC")

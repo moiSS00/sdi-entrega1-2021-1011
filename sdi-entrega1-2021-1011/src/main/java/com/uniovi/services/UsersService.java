@@ -19,6 +19,9 @@ public class UsersService {
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
+	private RolesService rolesService; 
 
 	public List<User> getAllUsersxceptAdmin() {
 		List<User> users = new ArrayList<User>();
@@ -39,7 +42,8 @@ public class UsersService {
 
 	public void removeUsers(List<Long> ids) {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
-		if(email.equals("admin@email.com")) {
+		User registeredUser = getUserByEmail(email); 
+		if(registeredUser.getRole().equals(rolesService.getRoles()[1])) {
 			for(Long id : ids) {
 				usersRepository.deleteById(id);
 			}

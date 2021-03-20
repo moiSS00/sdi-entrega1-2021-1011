@@ -47,25 +47,25 @@ public class InsertSampleDataService {
 		user6.setRole(rolesService.getRoles()[1]);
 		
 		//Creacion de las ofertas
-		Offer offer1_1 = new Offer("Título1.1", "Descripción1.1", 1.1,user1);
-		Offer offer1_2 = new Offer("Título1.2", "Descripción1.2", 1.2,user1); 
-		Offer offer1_3 = new Offer("Título1.3", "Descripción1.3", 1.3,user1);
+		Offer offer1_1 = new Offer("Coche SEAT", "Coche SEAT con 500 Km.", 1500.0,user1);
+		Offer offer1_2 = new Offer("Libro informática", "Libro 'Internet es maravilloso' de la editorial SA.", 10.50,user1); 
+		Offer offer1_3 = new Offer("Portatil", "Procesador I7 y 8Gb de RAM.", 320.99,user1);
 		
-		Offer offer2_1 = new Offer("Título2.1", "Descripción2.1", 2.1,user2); 
-		Offer offer2_2 = new Offer("Título2.2", "Descripción2.2", 2.2,user2); 
-		Offer offer2_3 = new Offer("Título2.3", "Descripción2.3", 2.3,user2);
+		Offer offer2_1 = new Offer("Ordenador fijo HP", "Con procesador AMD.", 400.21,user2); 
+		Offer offer2_2 = new Offer("Pack material escolar", "Pack 5 rotuladores BIC.", 2.2,user2); 
+		Offer offer2_3 = new Offer("Película", "Jurassic Park.", 2.3,user2);
 		
-		Offer offer3_1 = new Offer("Título3.1", "Descripción3.1", 3.1,user3); 
-		Offer offer3_2 = new Offer("Título3.2", "Descripción3.2", 3.2,user3); 
-		Offer offer3_3 = new Offer("Título3.3", "Descripción3.3", 3.3,user3);
+		Offer offer3_1 = new Offer("Televisión 4K", "Para una buena tarde de Netflix.", 80.99,user3); 
+		Offer offer3_2 = new Offer("Película molona", "Matrix.", 3.2,user3); 
+		Offer offer3_3 = new Offer("Academina matemáticas", "Clases universidad y bachillerato.", 30.0,user3);
 		
-		Offer offer4_1 = new Offer("Título4.1", "Descripción4.1", 4.1,user4); 
-		Offer offer4_2 = new Offer("Título4.2", "Descripción4.2", 4.2,user4); 
-		Offer offer4_3 = new Offer("Título4.3", "Descripción4.3", 4.3,user4);
+		Offer offer4_1 = new Offer("Coche León", "Tiene un ligero abollón en la puerta delantera izquierda.", 90.0,user4); 
+		Offer offer4_2 = new Offer("Ordenador fijo personalizado", "Con tarjeta gráfica NVIDEA RTX 2600.", 320.0,user4); 
+		Offer offer4_3 = new Offer("Coche BMW", "Sin usar. Esta nuevo.", 6000.0,user4);
 		
-		Offer offer5_1 = new Offer("Título5.1", "Descripción5.1", 5.1,user5); 
-		Offer offer5_2 = new Offer("Título5.2", "Descripción5.2", 5.2,user5); 
-		Offer offer5_3 = new Offer("Título5.3", "Descripción5.3", 200.0,user5);
+		Offer offer5_1 = new Offer("Ratón oficina", "Ratón de uso diario inalámbrico.", 9.80,user5); 
+		Offer offer5_2 = new Offer("Microfono", "Para hacer ASMRs.", 120.90,user5); 
+		Offer offer5_3 = new Offer("Disco duro", "Disco duro de 500 Gb SSD.", 80.0,user5);
 		
 		
 		//Inicializo colecciones necesarias

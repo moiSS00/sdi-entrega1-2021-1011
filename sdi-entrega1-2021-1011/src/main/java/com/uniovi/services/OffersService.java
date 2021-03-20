@@ -23,8 +23,7 @@ public class OffersService {
 
 	@Autowired
 	private UsersService usersService;
-	
- 
+
 	public Page<Offer> getAvailableOffers(Pageable pageable) {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		Page<Offer> offers = offersRepository.findAllAvailableOffers(pageable, email);
@@ -51,12 +50,15 @@ public class OffersService {
 		offersRepository.save(offer);
 	}
 
-	public void deleteOffer(Long id) {
-		offersRepository.deleteById(id);
-	}
-
 	public Offer getOfferById(Long id) {
 		return offersRepository.findById(id).get();
+	}
+
+	public void deleteOffer(Long id) {
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		if (getOfferById(id).getOwner().getEmail().equals(email)) {
+			offersRepository.deleteById(id);
+		}
 	}
 
 	public boolean buyOffer(Offer offer) {
@@ -80,14 +82,14 @@ public class OffersService {
 			// Guardamos los cambios realizados en la base de datos
 			addOffer(offer);
 			usersService.addUser(registeredUser, false);
-			
-			// Indicamos que se compro con exito 
-			return true; 
-	
+
+			// Indicamos que se compro con exito
+			return true;
+
 		}
-		
+
 		// Indicamos que no se pudo comprar
-		return false; 
+		return false;
 	}
 
 }

@@ -5,8 +5,8 @@
 
 	<nav th:replace="fragments/nav" />
 	<div th:replace="fragments/userInformation" />
-	
-		<div class="container">
+
+	<div class="container">
 		<h2>Lista de ofertas</h2>
 		<p>Las ofertas que actualmente figuran en el sistema son las
 			siguientes:</p>
@@ -24,11 +24,12 @@
 						<td th:text="${offer.title}">Título ejemplo</td>
 						<td th:text="${offer.description}">10</td>
 						<td th:text="${offer.price}">0</td>
+						<td><a th:href="${'/offer/delete/' + offer.id}">eliminar</a></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
-<footer th:replace="fragments/footer" />
+	<footer th:replace="fragments/footer" />
 </body>
 </html>

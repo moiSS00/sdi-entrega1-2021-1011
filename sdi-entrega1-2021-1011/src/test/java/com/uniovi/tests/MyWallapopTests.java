@@ -542,7 +542,7 @@ public class MyWallapopTests {
 		// Iniciamos sesión como usuario estandar
 		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
 
-		// Ir a la opcion de dar de alta una nota
+		// Ir a la opcion de listar ofertas propias
 		elements = PO_View.checkElement(driver, "id", "offers-menu");
 		elements.get(0).click();
 		elements = PO_View.checkElement(driver, "@href", "/offer/ownedList");
@@ -551,7 +551,77 @@ public class MyWallapopTests {
 		// Comprobamos que estan todas las ofertas
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
 		assertTrue(elements.size() == 3);
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR19. Ir a la lista de ofertas, borrar la primera oferta de la lista,
+	// comprobar que la lista se actualiza y que la oferta desaparece
+	@Test
+	public void PR19() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de listar ofertas propias 
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/ownedList");
+		elements.get(0).click();
+
+		// Seleccionar la primera oferta
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr/td[4]/a");
+		assertTrue(elements.size() == 3);
+		elements.get(0).click();
 		
+		// Comprobar que se ha eliminado correctamente 
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
+		assertTrue(elements.size() == 2);
+		SeleniumUtils.textoNoPresentePagina(driver, "Coche SEAT");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+	
+	// PR20. Ir a la lista de ofertas, borrar la última oferta de la lista, comprobar que la lista se actualiza y 
+	// que la oferta desaparece
+	@Test
+	public void PR20() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de listar ofertas propias 
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/ownedList");
+		elements.get(0).click();
+
+		// Seleccionar la primera oferta
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr/td[4]/a");
+		assertTrue(elements.size() == 3);
+		elements.get(elements.size() - 1).click();
+		
+		// Comprobar que se ha eliminado correctamente 
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
+		assertTrue(elements.size() == 2);
+		SeleniumUtils.textoNoPresentePagina(driver, "Portatil");
+
 		// Hacemos logout
 		elements = PO_View.checkElement(driver, "@href", "/logout");
 		assertTrue(elements.size() == 1);
