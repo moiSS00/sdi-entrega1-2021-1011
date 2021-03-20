@@ -38,9 +38,9 @@ public class InsertSampleDataService {
 		user3.setRole(rolesService.getRoles()[0]);
 		User user4 = new User("correo4@prueba.com", "Nombre4", "Apellido4");
 		user4.setPassword("1234567");
-		user4.setRole(rolesService.getRoles()[1]);
-		User user5 = new User("correo5@prueba.com", "Nombre5", "Apellido5");
-		user5.setPassword("1234567");
+		user4.setRole(rolesService.getRoles()[0]);
+		User user5 = new User("admin@email.com", "AdminName", "AdminLastName");
+		user5.setPassword("admin");
 		user5.setRole(rolesService.getRoles()[1]);
 		
 		//Creacion de las ofertas

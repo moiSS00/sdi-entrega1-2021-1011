@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.uniovi.tests.pageobjects.PO_LoginView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_RegisterView;
 import com.uniovi.tests.pageobjects.PO_View;
@@ -139,6 +140,89 @@ public class MyWallapopTests {
 		// Rellenamos el formulario con un email ya existente
 		PO_RegisterView.fillForm(driver, "correo1@prueba.com", "prueba", "prueba", "123456", "123456");
 		SeleniumUtils.textoPresentePagina(driver, "Ya existe un usuario con este email.");
+	}
+
+	// PR05.Inicio de sesión con datos válidos (administrador).
+	@Test
+	public void PR05() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Introducimos los datos de la cuenta de administrador
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		PO_View.checkElement(driver, "text", "admin@email.com");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR06.Inicio de sesión con datos válidos (usuario estándar).
+	@Test
+	public void PR06() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Introducimos los datos de la cuenta de administrador
+		PO_LoginView.fillForm(driver, "correo1@prueba.com", "1234567");
+		PO_View.checkElement(driver, "text", "correo1@prueba.com");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR07.Inicio de sesión con datos inválidos (usuario estándar, campo email y
+	// contraseña vacíos).
+	@Test
+	public void PR07() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Dejamos ambos campos vacíos
+		PO_LoginView.fillForm(driver, "", "");
+		PO_View.checkElement(driver, "text", "Idéntificate");
+	}
+
+	// PR08.Inicio de sesión con datos válidos (usuario estándar, email existente,
+	// pero contraseña incorrecta).
+	@Test
+	public void PR08() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Dejamos ambos campos vacíos
+		PO_LoginView.fillForm(driver, "correo1@prueba.com", "incorrecto");
+		PO_View.checkElement(driver, "text", "Idéntificate");
+	}
+
+	// PR09.Inicio de sesión con datos inválidos (usuario estándar, email no
+	// existente en la aplicación).
+	@Test
+	public void PR09() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Dejamos ambos campos vacíos
+		PO_LoginView.fillForm(driver, "correo6@prueba.com", "1234567");
+		PO_View.checkElement(driver, "text", "Idéntificate");
 	}
 
 }
