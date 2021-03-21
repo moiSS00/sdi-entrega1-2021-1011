@@ -877,11 +877,65 @@ public class MyWallapopTests {
 		elements = PO_View.checkElement(driver, "text", "Televisión 4K");
 		elements = PO_View.checkElement(driver, "text", "correo3@email.com");
 
-
 		// Hacemos logout
 		elements = PO_View.checkElement(driver, "@href", "/logout");
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
+	}
+
+	// PR28. Intentar acceder sin estar autenticado a la opción de listado de
+	// usuarios del administrador. Se deberá volver al formulario de login.
+	@Test
+	public void PR28() {
+
+		// Intentamos acceder a la lista de usuarios sin estar autenticado
+		driver.navigate().to(URL + "/user/list");
+
+		// Comprobamos que nos devuelve al formulario de login
+		PO_View.checkElement(driver, "text", "Identifícate");
+
+	}
+
+	// PR29. Intentar acceder sin estar autenticado a la opción de listado de
+	// ofertas propias de un usuario estándar. Se deberá volver al formulario de
+	// login.
+	@Test
+	public void PR29() {
+
+		// Intentamos acceder a la lista de ofertas propias del usuario usuarios sin
+		// estar autenticado
+		driver.navigate().to(URL + "/offer/ownedList");
+
+		// Comprobamos que nos devuelve al formulario de login
+		PO_View.checkElement(driver, "text", "Identifícate");
+
+	}
+
+	// PR30. Estando autenticado como usuario estándar intentar acceder a la opción
+	// de listado de usuarios del administrador. Se deberá indicar un mensaje de acción prohibida.
+	@Test
+	public void PR30() {
+		
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Intentamos acceder a la lista de usuarios sim ser adiminitrador
+		driver.navigate().to(URL + "/user/list");
+
+		// Comprobamos que nos devuelve al formulario de login
+		SeleniumUtils.textoPresentePagina(driver, "Forbidden");
+		
+		//Volvemos al comienzo para cerrar sesión 
+		driver.navigate().to(URL + "/home");
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
 	}
 
 }
