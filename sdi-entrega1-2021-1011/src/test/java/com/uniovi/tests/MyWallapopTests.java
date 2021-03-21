@@ -742,10 +742,9 @@ public class MyWallapopTests {
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
 		elements.get(0).click();
 
-		// Compramos un producto que nos deja en saldo positivo 
+		// Compramos un producto que nos deja en saldo positivo
 		elements = PO_View.checkElement(driver, "text", "100.0");
-		elements = PO_View.checkElement(driver, "free",
-				"//*[@id=\"tableSearchedOffers\"]/tbody/tr[1]/td[4]/div/div/button");
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableSearchedOffers\"]/tbody/tr[1]/td[4]/div/div/a");
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
 
@@ -783,14 +782,13 @@ public class MyWallapopTests {
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
-		elements.get(0).sendKeys("disco");
+		elements.get(0).sendKeys("disco duro");
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
 		elements.get(0).click();
 
-		// Comprobar un producto que nos deja con saldo 0 
+		// Comprobar un producto que nos deja con saldo 0
 		elements = PO_View.checkElement(driver, "text", "100.0");
-		elements = PO_View.checkElement(driver, "free",
-				"//*[@id=\"tableSearchedOffers\"]/tbody/tr/td[4]/div/div/button");
+		elements = PO_View.checkElement(driver, "text", "Comprar");
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
 
@@ -845,6 +843,40 @@ public class MyWallapopTests {
 		elements = PO_View.checkElement(driver, "text", "100.0");
 		elements = PO_View.checkElement(driver, "text", "Comprar");
 		assertTrue(elements.size() == 1);
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR26. Ir a la opción de ofertas compradas del usuario y mostrar la lista.
+	// Comprobar que aparecen las ofertas que deben aparecer.
+	@Test
+	public void PR26() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de buscar ofertas para comprar
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/purchasedList");
+		elements.get(0).click();
+
+		// Realizamos una búsqueda
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
+		assertTrue(elements.size() == 2);
+		elements = PO_View.checkElement(driver, "text", "Ordenador fijo HP");
+		elements = PO_View.checkElement(driver, "text", "correo2@email.com");
+		elements = PO_View.checkElement(driver, "text", "Televisión 4K");
+		elements = PO_View.checkElement(driver, "text", "correo3@email.com");
+
 
 		// Hacemos logout
 		elements = PO_View.checkElement(driver, "@href", "/logout");
