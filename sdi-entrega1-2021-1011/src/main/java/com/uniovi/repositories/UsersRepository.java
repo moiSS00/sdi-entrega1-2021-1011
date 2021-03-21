@@ -12,7 +12,7 @@ import com.uniovi.entities.User;
 public interface UsersRepository extends CrudRepository<User, Long> {
 
 	@Query("SELECT u from User u WHERE u.role not like 'ROLE_ADMIN' ORDER BY u.id ASC")
-	List<User> findAllUsersxceptAdmin();
+	List<User> findAllUsersExceptAdmin();
 
 	User findByEmail(String email);
 	

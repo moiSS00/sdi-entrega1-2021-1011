@@ -24,7 +24,7 @@
 						<li><a href="/offer/searchList">Buscar ofertas</a></li>
 						<li><a href="/offer/add">Dar de alta una oferta</a></li>
 					</ul></li>
-				<li><a href="/user/list">Lista de usuarios</a></li>
+				<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/user/list">Lista de usuarios</a></li>
 
 			</ul>
 			<ul class="nav navbar-nav navbar-right">

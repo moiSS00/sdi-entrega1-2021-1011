@@ -25,7 +25,7 @@ public class UsersService {
 
 	public List<User> getAllUsersxceptAdmin() {
 		List<User> users = new ArrayList<User>();
-		usersRepository.findAllUsersxceptAdmin().forEach(users::add);
+		usersRepository.findAllUsersExceptAdmin().forEach(users::add);
 		return users;
 	}
 

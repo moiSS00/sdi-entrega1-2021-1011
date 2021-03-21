@@ -8,7 +8,7 @@
 
 	<div class="container">
 		<h2>Lista de ofertas disponibles</h2>
-		<form class="navbar-form" action="/offer/searchList">
+		<form class="navbar-form" action="/offer/searchList" id="searchTextForm">
 			<div class="form-group">
 				<input name="searchText" type="text" class="form-control" size="50"
 					placeholder="Buscar por título de la oferta">
@@ -48,9 +48,13 @@
 										$("#buyButton[[${offer.id}]]").click(function() {
 											$.get("/offer/[[${offer.id}]]/buy", function(data) {
 												 var numberPage = [[${param.page}]];
+												 var searchText = [[${param.searchText}]];
 												 var urlUpdate = '/offer/searchList/update';
 												 if ( numberPage != null ){
 												 urlUpdate += "?page="+numberPage[0];
+												 }
+												 if ( searchText != null ){
+													 urlUpdate += "?searchText="+searchText[0];
 												 }
 												 $("#tableSearchedOffers").load(urlUpdate);
 												 $("#userInformation").load("/userInformation/searchList/update");

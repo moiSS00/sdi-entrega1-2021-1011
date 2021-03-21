@@ -109,8 +109,16 @@ public class OffersController {
 	}
 
 	@RequestMapping(value = "/offer/searchList/update", method = RequestMethod.GET)
-	public String setOffer(Model model, Pageable pageable) {
-		model.addAttribute("offersList", offersService.getAvailableOffers(pageable));
+	public String setOffer(Model model, Pageable pageable,
+			@RequestParam(value = "", required = false) String searchText) {
+		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
+		if (searchText != null && !searchText.isEmpty()) {
+			offers = offersService.searchOffersByTitle(pageable, searchText);
+		} else {
+			offers = offersService.getAvailableOffers(pageable);
+		}
+		model.addAttribute("offersList", offers.getContent());
+		model.addAttribute("page", offers);
 		return "offer/searchList :: tableSearchedOffers";
 	}
 }

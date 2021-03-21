@@ -571,7 +571,7 @@ public class MyWallapopTests {
 		// Iniciamos sesión como usuario estandar
 		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
 
-		// Ir a la opcion de listar ofertas propias 
+		// Ir a la opcion de listar ofertas propias
 		elements = PO_View.checkElement(driver, "id", "offers-menu");
 		elements.get(0).click();
 		elements = PO_View.checkElement(driver, "@href", "/offer/ownedList");
@@ -581,8 +581,8 @@ public class MyWallapopTests {
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr/td[4]/a");
 		assertTrue(elements.size() == 3);
 		elements.get(0).click();
-		
-		// Comprobar que se ha eliminado correctamente 
+
+		// Comprobar que se ha eliminado correctamente
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
 		assertTrue(elements.size() == 2);
 		SeleniumUtils.textoNoPresentePagina(driver, "Coche SEAT");
@@ -592,8 +592,9 @@ public class MyWallapopTests {
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
 	}
-	
-	// PR20. Ir a la lista de ofertas, borrar la última oferta de la lista, comprobar que la lista se actualiza y 
+
+	// PR20. Ir a la lista de ofertas, borrar la última oferta de la lista,
+	// comprobar que la lista se actualiza y
 	// que la oferta desaparece
 	@Test
 	public void PR20() {
@@ -606,7 +607,7 @@ public class MyWallapopTests {
 		// Iniciamos sesión como usuario estandar
 		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
 
-		// Ir a la opcion de listar ofertas propias 
+		// Ir a la opcion de listar ofertas propias
 		elements = PO_View.checkElement(driver, "id", "offers-menu");
 		elements.get(0).click();
 		elements = PO_View.checkElement(driver, "@href", "/offer/ownedList");
@@ -616,11 +617,96 @@ public class MyWallapopTests {
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr/td[4]/a");
 		assertTrue(elements.size() == 3);
 		elements.get(elements.size() - 1).click();
-		
-		// Comprobar que se ha eliminado correctamente 
+
+		// Comprobar que se ha eliminado correctamente
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
 		assertTrue(elements.size() == 2);
 		SeleniumUtils.textoNoPresentePagina(driver, "Portatil");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR21. Hacer una búsqueda con el campo vacío y comprobar que se muestra la
+	// página que corresponde con el listado de las ofertas existentes en el sistema
+	@Test
+	public void PR21() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de buscar ofertas para comprar
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
+		elements.get(0).click();
+
+		// Realizamos una búsqueda vacía
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+		elements.get(0).sendKeys("");
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
+		elements.get(0).click();
+
+		// Comprobar que el contenido de cada página es el correcto
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableSearchedOffers\"]/tbody/tr");
+		assertTrue(elements.size() == 5);
+		elements = PO_View.checkElement(driver, "free", "//a[contains(@class, 'page-link')]");
+		elements.get(2).click();
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableSearchedOffers\"]/tbody/tr");
+		assertTrue(elements.size() == 5);
+		elements = PO_View.checkElement(driver, "free", "//a[contains(@class, 'page-link')]");
+		elements.get(3).click();
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableSearchedOffers\"]/tbody/tr");
+		assertTrue(elements.size() == 2);
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR22. Hacer una búsqueda escribiendo en el campo un texto que no exista y
+	// comprobar que se muestra la página que corresponde, con la lista de ofertas
+	// vacía
+	@Test
+	public void PR22() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de buscar ofertas para comprar
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
+		elements.get(0).click();
+
+		// Realizamos una búsqueda con un texto que no exista
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+		elements.get(0).sendKeys("prueba");
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
+		elements.get(0).click();
+
+		// Comprobar que el contenido de cada página es el correcto
+		elements = driver.findElements(By.xpath("//*[@id=\"tableSearchedOffers\"]/tbody/tr"));		
+		assertTrue(elements.size() == 0);
+		elements = PO_View.checkElement(driver, "free", "//a[contains(@class, 'page-link')]");
+		assertTrue(elements.size() == 3);
 
 		// Hacemos logout
 		elements = PO_View.checkElement(driver, "@href", "/logout");
