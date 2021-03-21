@@ -19,6 +19,7 @@ import com.uniovi.repositories.UsersRepository;
 import com.uniovi.services.InsertSampleDataService;
 import com.uniovi.tests.pageobjects.PO_AddOfferView;
 import com.uniovi.tests.pageobjects.PO_LoginView;
+import com.uniovi.tests.pageobjects.PO_NavView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_RegisterView;
 import com.uniovi.tests.pageobjects.PO_View;
@@ -883,6 +884,59 @@ public class MyWallapopTests {
 		elements.get(0).click();
 	}
 
+	// PR27. Visualizar al menos cuatro páginas haciendo el cambio
+	// español/inglés/español
+	// (comprobando que algunas de las etiquetas cambian al idioma correspondiente).
+	// Página principal/Opciones principales de usuario/Listado de usuarios /Vista
+	// de alta de oferta.
+	@Test
+	public void PR27() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como administrador
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		
+		// Probamos que el mensaje de bienvenida al usuario se cambia de idioma 
+		// correctamente 
+		
+		PO_NavView.changeIdiom(driver, "Spanish");
+		SeleniumUtils.textoPresentePagina(driver, "¡ Bienvenido !");
+		PO_NavView.changeIdiom(driver, "English");
+		SeleniumUtils.textoPresentePagina(driver, "Welcome !");
+		PO_NavView.changeIdiom(driver, "Spanish");
+		SeleniumUtils.textoPresentePagina(driver, "¡ Bienvenido !");
+		
+		//Tambien provaremos con una opción del menú		
+		PO_NavView.changeIdiom(driver, "Spanish");
+		SeleniumUtils.textoPresentePagina(driver, "Idioma");
+		PO_NavView.changeIdiom(driver, "English");
+		SeleniumUtils.textoPresentePagina(driver, "Language");
+		PO_NavView.changeIdiom(driver, "Spanish");
+		SeleniumUtils.textoPresentePagina(driver, "Idioma");
+		
+		//Vamos a la vista de dar de alta una oferta para hacer las mismas comprobaciones
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click(); 
+		elements = PO_View.checkElement(driver, "@href", "offer/add");
+		elements.get(0).click();
+		PO_NavView.changeIdiom(driver, "Spanish");
+		SeleniumUtils.textoPresentePagina(driver, "Dar de alta una oferta");
+		PO_NavView.changeIdiom(driver, "English");
+		SeleniumUtils.textoPresentePagina(driver, "Register an offer");
+		PO_NavView.changeIdiom(driver, "Spanish");
+		SeleniumUtils.textoPresentePagina(driver, "Dar de alta una oferta");
+
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
 	// PR28. Intentar acceder sin estar autenticado a la opción de listado de
 	// usuarios del administrador. Se deberá volver al formulario de login.
 	@Test
@@ -912,10 +966,11 @@ public class MyWallapopTests {
 	}
 
 	// PR30. Estando autenticado como usuario estándar intentar acceder a la opción
-	// de listado de usuarios del administrador. Se deberá indicar un mensaje de acción prohibida.
+	// de listado de usuarios del administrador. Se deberá indicar un mensaje de
+	// acción prohibida.
 	@Test
 	public void PR30() {
-		
+
 		// Vamos al formulario de inicio de sesion
 		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
 		assertTrue(elements.size() == 1);
@@ -929,8 +984,8 @@ public class MyWallapopTests {
 
 		// Comprobamos que nos devuelve al formulario de login
 		SeleniumUtils.textoPresentePagina(driver, "Forbidden");
-		
-		//Volvemos al comienzo para cerrar sesión 
+
+		// Volvemos al comienzo para cerrar sesión
 		driver.navigate().to(URL + "/home");
 		elements = PO_View.checkElement(driver, "@href", "/logout");
 		assertTrue(elements.size() == 1);

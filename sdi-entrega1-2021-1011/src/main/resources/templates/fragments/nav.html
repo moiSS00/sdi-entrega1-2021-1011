@@ -13,8 +13,8 @@
 			<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
 				<li><a href="/" th:text="#{nav.home}">Home</a></li>
 				<li id="offers-menu" class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#" th:text="#{nav.gtsOfert}">
-						<span class="caret"></span>
+					data-toggle="dropdown" href="#" >
+						<span th:text="#{nav.gtsOfert}"></span> <span class="caret"></span>
 				</a>
 					<ul class="dropdown-menu">
 						<li><a href="/offer/ownedList" th:text="#{nav.lOfertPropias}"></a></li>
