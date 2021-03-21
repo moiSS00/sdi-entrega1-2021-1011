@@ -39,6 +39,7 @@ public class OffersController {
 	@Autowired
 	private AddOfferFormValidator addOfferFormValidator;
 
+	
 	@RequestMapping(value = "/offer/searchList", method = RequestMethod.GET)
 	public String getOwnedList(Model model, Pageable pageable,
 			@RequestParam(value = "", required = false) String searchText,
