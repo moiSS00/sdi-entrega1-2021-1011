@@ -11,6 +11,11 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -20,16 +25,10 @@ import com.uniovi.services.InsertSampleDataService;
 import com.uniovi.tests.pageobjects.PO_AddOfferView;
 import com.uniovi.tests.pageobjects.PO_LoginView;
 import com.uniovi.tests.pageobjects.PO_NavView;
-import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_RegisterView;
+import com.uniovi.tests.pageobjects.PO_SearchListView;
 import com.uniovi.tests.pageobjects.PO_View;
 import com.uniovi.tests.util.SeleniumUtils;
-
-import org.junit.runners.MethodSorters;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 //Ordenamos las pruebas por el nombre del método
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -106,9 +105,7 @@ public class MyWallapopTests {
 		PO_View.checkElement(driver, "text", "pueba@email.com");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR02. Registro de Usuario con datos inválidos (email vacío, nombre vacío,
@@ -148,9 +145,7 @@ public class MyWallapopTests {
 	public void PR03() {
 
 		// Vamos al formulario de registro
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/signup");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.goToSignUp(driver);
 
 		// Rellenamos el formulario con contraseñas distitnas
 		PO_RegisterView.fillForm(driver, "pueba@email.com", "prueba", "prueba", "123456", "1234567");
@@ -162,9 +157,7 @@ public class MyWallapopTests {
 	public void PR04() {
 
 		// Vamos al formulario de registro
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/signup");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.goToSignUp(driver);
 
 		// Rellenamos el formulario con un email ya existente
 		PO_RegisterView.fillForm(driver, "correo1@email.com", "prueba", "prueba", "123456", "123456");
@@ -175,38 +168,24 @@ public class MyWallapopTests {
 	@Test
 	public void PR05() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
-		// Introducimos los datos de la cuenta de administrador
-		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		// Iniciamos sesión como administrador
+		PO_NavView.logInAs(driver, "admin@email.com", "admin");
 		PO_View.checkElement(driver, "text", "admin@email.com");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR06.Inicio de sesión con datos válidos (usuario estándar).
 	@Test
 	public void PR06() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
-		// Introducimos los datos de la cuenta de administrador
-		PO_LoginView.fillForm(driver, "correo4@email.com", "1234567");
+		// Introducimos los datos de un usuario estandar
+		PO_NavView.logInAs(driver, "correo4@email.com", "1234567");
 		PO_View.checkElement(driver, "text", "correo4@email.com");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR07.Inicio de sesión con datos inválidos (usuario estándar, campo email y
@@ -214,16 +193,11 @@ public class MyWallapopTests {
 	@Test
 	public void PR07() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Dejamos ambos campos vacíos y comprobamos que se despliega el mensaje de
 		// error
 		// y segimos en el formulario de login.
-		PO_LoginView.fillForm(driver, "", "");
-		elements = PO_View.checkElement(driver, "class", "alert");
+		PO_NavView.logInAs(driver, "", "");		
+		List<WebElement> elements = PO_View.checkElement(driver, "class", "alert");
 		assertTrue(elements.size() == 1);
 		PO_View.checkElement(driver, "text", "Identifícate");
 	}
@@ -233,15 +207,10 @@ public class MyWallapopTests {
 	@Test
 	public void PR08() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Utilizamos un email existente con una contraseña y comprobamos que se
 		// despliega el mensaje de error y segimos en el formulario de login.
-		PO_LoginView.fillForm(driver, "correo4@email.com", "incorrecto");
-		elements = PO_View.checkElement(driver, "class", "alert");
+		PO_NavView.logInAs(driver, "correo4@email.com", "incorrecto");		
+		List<WebElement> elements = PO_View.checkElement(driver, "class", "alert");
 		assertTrue(elements.size() == 1);
 		PO_View.checkElement(driver, "text", "Identifícate");
 	}
@@ -269,18 +238,11 @@ public class MyWallapopTests {
 	@Test
 	public void PR10() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar.
-		PO_LoginView.fillForm(driver, "correo4@email.com", "1234567");
-
+		PO_NavView.logInAs(driver, "correo4@email.com", "1234567");
+		
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 
 		// Comprobamos que estamos en la página de inicio
 		PO_View.checkElement(driver, "text", "¡ Bienvenidos a MyWallapop !");
@@ -300,16 +262,11 @@ public class MyWallapopTests {
 	@Test
 	public void PR12() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como administrador.
-		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		PO_NavView.logInAs(driver, "admin@email.com", "admin");
 
 		// Ir a la lista de usuarios
-		elements = PO_View.checkElement(driver, "@href", "/user/list");
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/user/list");
 		elements.get(0).click();
 
 		// Comprobamos que figuran todos los usuarios del sistema (Excepto el usuarios
@@ -319,9 +276,7 @@ public class MyWallapopTests {
 		assertTrue(elements.size() == 5);
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR13. Ir a la lista de usuarios, borrar el primer usuario de la lista,
@@ -329,16 +284,11 @@ public class MyWallapopTests {
 	@Test
 	public void PR13() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como administrador.
-		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		PO_NavView.logInAs(driver, "admin@email.com", "admin");
 
 		// Ir a la lista de usuarios
-		elements = PO_View.checkElement(driver, "@href", "/user/list");
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/user/list");
 		elements.get(0).click();
 
 		// Seleccionamos el primer usuario que aparece
@@ -357,9 +307,7 @@ public class MyWallapopTests {
 		SeleniumUtils.textoNoPresentePagina(driver, "correo1@email.com");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR14. Ir a la lista de usuarios, borrar el último usuario de la lista,
@@ -367,16 +315,11 @@ public class MyWallapopTests {
 	@Test
 	public void PR14() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como administrador.
-		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		PO_NavView.logInAs(driver, "admin@email.com", "admin");
 
 		// Ir a la lista de usuarios
-		elements = PO_View.checkElement(driver, "@href", "/user/list");
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/user/list");
 		elements.get(0).click();
 
 		// Seleccionamos el último usuario que aparece
@@ -395,9 +338,7 @@ public class MyWallapopTests {
 		SeleniumUtils.textoNoPresentePagina(driver, "correo5@email.com");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR15. Ir a la lista de usuarios, borrar 3 usuarios, comprobar que la lista se
@@ -405,16 +346,11 @@ public class MyWallapopTests {
 	@Test
 	public void PR15() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como administrador.
-		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		PO_NavView.logInAs(driver, "admin@email.com", "admin");
 
 		// Ir a la lista de usuarios
-		elements = PO_View.checkElement(driver, "@href", "/user/list");
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/user/list");
 		elements.get(0).click();
 
 		// Seleccionamos el primer y ultimo usuario. Tambien seleccionamos uno
@@ -438,9 +374,7 @@ public class MyWallapopTests {
 		SeleniumUtils.textoNoPresentePagina(driver, "correo5@email.com");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR16. Ir al formulario de alta de oferta, rellenarla con datos válidos y
@@ -449,19 +383,11 @@ public class MyWallapopTests {
 	@Test
 	public void PR16() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de dar de alta una nota
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/add");
-		elements.get(0).click();
+		PO_NavView.goToaddOffer(driver);
 
 		// Rellenamos el formulario de alta de oferta con datos validos
 		PO_AddOfferView.fillForm(driver, "PruebaTitulo", "PruebaDescripcion", "0.21");
@@ -473,9 +399,7 @@ public class MyWallapopTests {
 		PO_View.checkElement(driver, "text", "0.21");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR17. Ir al formulario de alta de oferta, rellenarla con datos inválidos
@@ -484,19 +408,11 @@ public class MyWallapopTests {
 	@Test
 	public void PR17() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de dar de alta una nota
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/add");
-		elements.get(0).click();
+		PO_NavView.goToaddOffer(driver);
 
 		// Título vacío
 		PO_AddOfferView.fillForm(driver, "", "PruebaDescripcion", "0.21");
@@ -525,9 +441,7 @@ public class MyWallapopTests {
 		SeleniumUtils.textoPresentePagina(driver, "El precio debe de ser un valor positivo.");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR18. Mostrar el listado de ofertas para dicho usuario y comprobar que se
@@ -535,28 +449,18 @@ public class MyWallapopTests {
 	@Test
 	public void PR18() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de listar ofertas propias
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/ownedList");
-		elements.get(0).click();
+		PO_NavView.goToOwnOffers(driver);
 
 		// Comprobamos que estan todas las ofertas
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
+		List<WebElement> elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
 		assertTrue(elements.size() == 3);
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR19. Ir a la lista de ofertas, borrar la primera oferta de la lista,
@@ -564,22 +468,14 @@ public class MyWallapopTests {
 	@Test
 	public void PR19() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de listar ofertas propias
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/ownedList");
-		elements.get(0).click();
+		PO_NavView.goToOwnOffers(driver);
 
 		// Seleccionar la primera oferta
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr/td[4]/a");
+		List<WebElement> elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr/td[4]/a");
 		assertTrue(elements.size() == 3);
 		elements.get(0).click();
 
@@ -589,9 +485,7 @@ public class MyWallapopTests {
 		SeleniumUtils.textoNoPresentePagina(driver, "Coche SEAT");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR20. Ir a la lista de ofertas, borrar la última oferta de la lista,
@@ -600,22 +494,14 @@ public class MyWallapopTests {
 	@Test
 	public void PR20() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de listar ofertas propias
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/ownedList");
-		elements.get(0).click();
+		PO_NavView.goToOwnOffers(driver);
 
 		// Seleccionar la primera oferta
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr/td[4]/a");
+		List<WebElement> elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr/td[4]/a");
 		assertTrue(elements.size() == 3);
 		elements.get(elements.size() - 1).click();
 
@@ -625,9 +511,7 @@ public class MyWallapopTests {
 		SeleniumUtils.textoNoPresentePagina(driver, "Portatil");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR21. Hacer una búsqueda con el campo vacío y comprobar que se muestra la
@@ -635,30 +519,17 @@ public class MyWallapopTests {
 	@Test
 	public void PR21() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de buscar ofertas para comprar
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
-		elements.get(0).click();
+		PO_NavView.goToSearchOffer(driver);
 
 		// Realizamos una búsqueda vacía
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-		elements.get(0).sendKeys("");
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
-		elements.get(0).click();
+		PO_SearchListView.makeSearch(driver, "");
 
 		// Comprobar que el contenido de cada página es el correcto
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableSearchedOffers\"]/tbody/tr");
+		List<WebElement> elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableSearchedOffers\"]/tbody/tr");
 		assertTrue(elements.size() == 5);
 		elements = PO_View.checkElement(driver, "free", "//a[contains(@class, 'page-link')]");
 		elements.get(2).click();
@@ -670,9 +541,7 @@ public class MyWallapopTests {
 		assertTrue(elements.size() == 2);
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR22. Hacer una búsqueda escribiendo en el campo un texto que no exista y
@@ -681,38 +550,23 @@ public class MyWallapopTests {
 	@Test
 	public void PR22() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de buscar ofertas para comprar
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
-		elements.get(0).click();
+		PO_NavView.goToSearchOffer(driver);
 
 		// Realizamos una búsqueda con un texto que no exista
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-		elements.get(0).sendKeys("prueba");
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
-		elements.get(0).click();
+		PO_SearchListView.makeSearch(driver, "prueba");
 
 		// Comprobar que el contenido de cada página es el correcto
-		elements = driver.findElements(By.xpath("//*[@id=\"tableSearchedOffers\"]/tbody/tr"));
+		List<WebElement> elements = driver.findElements(By.xpath("//*[@id=\"tableSearchedOffers\"]/tbody/tr"));
 		assertTrue(elements.size() == 0);
 		elements = PO_View.checkElement(driver, "free", "//a[contains(@class, 'page-link')]");
 		assertTrue(elements.size() == 3);
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR23. Sobre una búsqueda determinada (a elección del desarrollador), comprar
@@ -721,30 +575,17 @@ public class MyWallapopTests {
 	@Test
 	public void PR23() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de buscar ofertas para comprar
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
-		elements.get(0).click();
+		PO_NavView.goToSearchOffer(driver);
 
 		// Realizamos una búsqueda
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-		elements.get(0).sendKeys("cula");
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
-		elements.get(0).click();
+		PO_SearchListView.makeSearch(driver, "cula");
 
 		// Compramos un producto que nos deja en saldo positivo
-		elements = PO_View.checkElement(driver, "text", "100.0");
+		List<WebElement> elements = PO_View.checkElement(driver, "text", "100.0");
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"tableSearchedOffers\"]/tbody/tr[1]/td[4]/div/div/a");
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
@@ -754,9 +595,7 @@ public class MyWallapopTests {
 		PO_View.checkElement(driver, "free", "//*[@id=\"tableSearchedOffers\"]/tbody/tr[1]/td[4]/div/div/span");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR24. Sobre una búsqueda determinada (a elección del desarrollador), comprar
@@ -765,30 +604,19 @@ public class MyWallapopTests {
 	@Test
 	public void PR24() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de buscar ofertas para comprar
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
-		elements.get(0).click();
+		PO_NavView.goToSearchOffer(driver);
+
 
 		// Realizamos una búsqueda
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-		elements.get(0).sendKeys("disco duro");
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
-		elements.get(0).click();
+		PO_SearchListView.makeSearch(driver, "disco duro");
+
 
 		// Comprobar un producto que nos deja con saldo 0
-		elements = PO_View.checkElement(driver, "text", "100.0");
+		List<WebElement> elements = PO_View.checkElement(driver, "text", "100.0");
 		elements = PO_View.checkElement(driver, "text", "Comprar");
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
@@ -798,9 +626,7 @@ public class MyWallapopTests {
 		PO_View.checkElement(driver, "text", "Vendido");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR25. Sobre una búsqueda determinada (a elección del desarrollador), intentar
@@ -809,30 +635,17 @@ public class MyWallapopTests {
 	@Test
 	public void PR25() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de buscar ofertas para comprar
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
-		elements.get(0).click();
-		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
-		elements.get(0).click();
+		PO_NavView.goToSearchOffer(driver);
 
 		// Realizamos una búsqueda
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-		elements.get(0).sendKeys("Ordenador fijo personalizado");
-		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
-		elements.get(0).click();
+		PO_SearchListView.makeSearch(driver, "Ordenador fijo personalizado");
 
 		// Intentamos comprar un producto con un precio superior a nuestro saldo
-		elements = PO_View.checkElement(driver, "text", "100.0");
+		List<WebElement> elements = PO_View.checkElement(driver, "text", "100.0");
 		elements = PO_View.checkElement(driver, "text", "Comprar");
 		assertTrue(elements.size() == 1);
 		elements.get(0).click();
@@ -846,9 +659,7 @@ public class MyWallapopTests {
 		assertTrue(elements.size() == 1);
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR26. Ir a la opción de ofertas compradas del usuario y mostrar la lista.
@@ -856,16 +667,12 @@ public class MyWallapopTests {
 	@Test
 	public void PR26() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
 
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Ir a la opcion de buscar ofertas para comprar
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		List<WebElement> elements = PO_View.checkElement(driver, "id", "offers-menu");
 		elements.get(0).click();
 		elements = PO_View.checkElement(driver, "@href", "/offer/purchasedList");
 		elements.get(0).click();
@@ -873,15 +680,13 @@ public class MyWallapopTests {
 		// Realizamos una búsqueda
 		elements = PO_View.checkElement(driver, "free", "//*[@id=\"offersTable\"]/tbody/tr");
 		assertTrue(elements.size() == 2);
-		elements = PO_View.checkElement(driver, "text", "Ordenador fijo HP");
-		elements = PO_View.checkElement(driver, "text", "correo2@email.com");
-		elements = PO_View.checkElement(driver, "text", "Televisión 4K");
-		elements = PO_View.checkElement(driver, "text", "correo3@email.com");
+		PO_View.checkElement(driver, "text", "Ordenador fijo HP");
+		PO_View.checkElement(driver, "text", "correo2@email.com");
+		PO_View.checkElement(driver, "text", "Televisión 4K");
+		PO_View.checkElement(driver, "text", "correo3@email.com");
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR27. Visualizar al menos cuatro páginas haciendo el cambio
@@ -892,17 +697,11 @@ public class MyWallapopTests {
 	@Test
 	public void PR27() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
-		// Iniciamos sesión como administrador
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		// Iniciamos sesión como usuario estandar
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 		
 		// Probamos que el mensaje de bienvenida al usuario se cambia de idioma 
 		// correctamente 
-		
 		PO_NavView.changeIdiom(driver, "Spanish");
 		SeleniumUtils.textoPresentePagina(driver, "¡ Bienvenido !");
 		PO_NavView.changeIdiom(driver, "English");
@@ -919,7 +718,7 @@ public class MyWallapopTests {
 		SeleniumUtils.textoPresentePagina(driver, "Idioma");
 		
 		//Vamos a la vista de dar de alta una oferta para hacer las mismas comprobaciones
-		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		List<WebElement> elements = PO_View.checkElement(driver, "id", "offers-menu");
 		elements.get(0).click(); 
 		elements = PO_View.checkElement(driver, "@href", "offer/add");
 		elements.get(0).click();
@@ -932,9 +731,7 @@ public class MyWallapopTests {
 
 
 		// Hacemos logout
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
+		PO_NavView.logOut(driver);
 	}
 
 	// PR28. Intentar acceder sin estar autenticado a la opción de listado de
@@ -971,13 +768,8 @@ public class MyWallapopTests {
 	@Test
 	public void PR30() {
 
-		// Vamos al formulario de inicio de sesion
-		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
 		// Iniciamos sesión como usuario estandar
-		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+		PO_NavView.logInAs(driver, "correo1@email.com", "1234567");
 
 		// Intentamos acceder a la lista de usuarios sim ser adiminitrador
 		driver.navigate().to(URL + "/user/list");
@@ -987,10 +779,8 @@ public class MyWallapopTests {
 
 		// Volvemos al comienzo para cerrar sesión
 		driver.navigate().to(URL + "/home");
-		elements = PO_View.checkElement(driver, "@href", "/logout");
-		assertTrue(elements.size() == 1);
-		elements.get(0).click();
-
+		
+		PO_NavView.logOut(driver);
 	}
 
 }
