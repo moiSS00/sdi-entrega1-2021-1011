@@ -65,7 +65,7 @@ public class InsertSampleDataService {
 		
 		Offer offer5_1 = new Offer("Ratón oficina", "Ratón de uso diario inalámbrico.", 9.80,user5); 
 		Offer offer5_2 = new Offer("Microfono", "Para hacer ASMRs.", 120.90,user5); 
-		Offer offer5_3 = new Offer("Disco duro", "Disco duro de 500 Gb SSD.", 80.0,user5);
+		Offer offer5_3 = new Offer("Disco duro", "Disco duro de 500 Gb SSD.", 100.0,user5);
 		
 		
 		//Inicializo colecciones necesarias

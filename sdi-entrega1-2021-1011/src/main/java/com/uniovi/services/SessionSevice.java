@@ -23,9 +23,18 @@ public class SessionSevice {
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		User registeredUser = usersService.getUserByEmail(email); 
 		httpSession.setAttribute("registeredUser", registeredUser);
+		addBuyErrorToSession(false);
 	}
 	
 	public void addBuyErrorToSession(boolean flag) {
 		httpSession.setAttribute("buyError", flag);
+	}
+	
+	public void addToSession(String clave, Object value) {
+		httpSession.setAttribute(clave, value);
+	}
+	
+	public Object get(String clave) {
+		return httpSession.getAttribute(clave);
 	}
 }

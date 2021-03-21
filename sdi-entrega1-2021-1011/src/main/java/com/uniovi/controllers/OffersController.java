@@ -41,17 +41,33 @@ public class OffersController {
 
 	@RequestMapping(value = "/offer/searchList", method = RequestMethod.GET)
 	public String getOwnedList(Model model, Pageable pageable,
-			@RequestParam(value = "", required = false) String searchText) {
+			@RequestParam(value = "", required = false) String searchText,
+			@RequestParam(required = false) Long idToPay) {
+		
+		//Pagamos la oferta y indicamos en el modelo si hubo error al pagarla
+		if (idToPay != null) {
+			Offer offerToPay = offersService.getOfferById(idToPay); 
+			model.addAttribute("error", !offersService.buyOffer(offerToPay)); 
+		}
+		
+		//Recargamos la informacion del usuario 
+		sessionService.loadRegisteredUser();
+		
+		
 		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
+		model.addAttribute("searchText", "");
 		if (searchText != null && !searchText.isEmpty()) {
+			model.addAttribute("searchText", searchText);
 			offers = offersService.searchOffersByTitle(pageable, searchText);
-		} else {
+		}
+		else {
 			offers = offersService.getAvailableOffers(pageable);
 		}
 		model.addAttribute("offersList", offers.getContent());
 		model.addAttribute("page", offers);
 		return "offer/searchList";
 	}
+	
 
 	@RequestMapping(value = "/offer/ownedList", method = RequestMethod.GET)
 	public String getOwnedList(Model model, Principal principal) {
@@ -89,36 +105,11 @@ public class OffersController {
 		return "redirect:/offer/ownedList";
 	}
 
-	@RequestMapping(value = "/offer/{id}/buy", method = RequestMethod.GET)
-	public String setOffer(Model model, @PathVariable Long id) {
-		Offer offerToBuy = offersService.getOfferById(id);
-		sessionService.addBuyErrorToSession(!offersService.buyOffer(offerToBuy));
-		return "redirect:/offer/searchList";
-	}
-
 	@RequestMapping(value = "/offer/delete/{id}", method = RequestMethod.GET)
 	public String deleteOffer(@PathVariable Long id) {
 		offersService.deleteOffer(id);
 		return "redirect:/offer/ownedList";
 	}
 
-	@RequestMapping(value = "/userInformation/searchList/update", method = RequestMethod.GET)
-	public String userInformationUpdate() {
-		sessionService.loadRegisteredUser();
-		return "offer/searchList :: userInformation";
-	}
 
-	@RequestMapping(value = "/offer/searchList/update", method = RequestMethod.GET)
-	public String setOffer(Model model, Pageable pageable,
-			@RequestParam(value = "", required = false) String searchText) {
-		Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
-		if (searchText != null && !searchText.isEmpty()) {
-			offers = offersService.searchOffersByTitle(pageable, searchText);
-		} else {
-			offers = offersService.getAvailableOffers(pageable);
-		}
-		model.addAttribute("offersList", offers.getContent());
-		model.addAttribute("page", offers);
-		return "offer/searchList :: tableSearchedOffers";
-	}
 }

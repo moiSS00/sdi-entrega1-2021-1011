@@ -4,28 +4,28 @@
 <body>
 	<nav th:replace="fragments/nav" />
 	<div th:replace="fragments/userInformation"
-		th:fragment="userInformation" />
+		th:fragment="userInformation" id="userInformation" />
 
 	<div class="container">
 		<h2>Lista de ofertas disponibles</h2>
-		<form class="navbar-form" action="/offer/searchList" id="searchTextForm">
+		<form class="navbar-form" action="/offer/searchList"
+			id="searchTextForm">
 			<div class="form-group">
 				<input name="searchText" type="text" class="form-control" size="50"
 					placeholder="Buscar por título de la oferta">
 			</div>
 			<button type="submit" class="btn btn-default">Buscar</button>
 		</form>
+		<div class="alert alert-danger" th:if="${error}">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<p>
+				<strong>¡Cuidado!</strong> Saldo insuficiente para realizar la
+				compra.
+			</p>
+		</div>
 		<div class="table-responsive">
 			<table class="table table-hover" th:fragment="tableSearchedOffers"
 				id="tableSearchedOffers">
-				<div class="alert alert-danger" th:if="${session.buyError}">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					<p>
-						<strong>¡Cuidado!</strong> Saldo insuficiente para realizar la
-						compra.
-					</p>
-				</div>
-
 				<thead>
 					<tr>
 						<th>Titulo</th>
@@ -41,27 +41,8 @@
 						<td>
 							<div>
 								<div th:if="${offer.buyer == null}">
-									<button type="button" th:id="${'buyButton' + offer.id}"
-										class="btn btn-info">Comprar</button>
-									<script th:inline="javascript">
-										/*<![CDATA[*/
-										$("#buyButton[[${offer.id}]]").click(function() {
-											$.get("/offer/[[${offer.id}]]/buy", function(data) {
-												 var numberPage = [[${param.page}]];
-												 var searchText = [[${param.searchText}]];
-												 var urlUpdate = '/offer/searchList/update';
-												 if ( numberPage != null ){
-												 urlUpdate += "?page="+numberPage[0];
-												 }
-												 if ( searchText != null ){
-													 urlUpdate += "?searchText="+searchText[0];
-												 }
-												 $("#tableSearchedOffers").load(urlUpdate);
-												 $("#userInformation").load("/userInformation/searchList/update");
-											});
-										});
-										/*]]>*/
-									</script>
+									<a
+										th:href="'/offer/searchList?idToPay=' + ${offer.id} + '&searchText=' + ${searchText}">Comprar</a>
 								</div>
 								<div th:if="${offer.buyer != null}">
 									<span class="text-danger" th:text="Vendido" />

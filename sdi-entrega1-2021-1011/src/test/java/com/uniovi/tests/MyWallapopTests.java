@@ -703,10 +703,148 @@ public class MyWallapopTests {
 		elements.get(0).click();
 
 		// Comprobar que el contenido de cada página es el correcto
-		elements = driver.findElements(By.xpath("//*[@id=\"tableSearchedOffers\"]/tbody/tr"));		
+		elements = driver.findElements(By.xpath("//*[@id=\"tableSearchedOffers\"]/tbody/tr"));
 		assertTrue(elements.size() == 0);
 		elements = PO_View.checkElement(driver, "free", "//a[contains(@class, 'page-link')]");
 		assertTrue(elements.size() == 3);
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR23. Sobre una búsqueda determinada (a elección del desarrollador), comprar
+	// una oferta que deja un saldo positivo en el contador del comprador. Comprobar
+	// que el contador se actualiza correctamente en la vista del comprador.
+	@Test
+	public void PR23() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de buscar ofertas para comprar
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
+		elements.get(0).click();
+
+		// Realizamos una búsqueda
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+		elements.get(0).sendKeys("cula");
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
+		elements.get(0).click();
+
+		// Compramos un producto que nos deja en saldo positivo 
+		elements = PO_View.checkElement(driver, "text", "100.0");
+		elements = PO_View.checkElement(driver, "free",
+				"//*[@id=\"tableSearchedOffers\"]/tbody/tr[1]/td[4]/div/div/button");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Comprobamos que se actualizó el saldo y que consta como vendida
+		elements = PO_View.checkElement(driver, "text", "97.7");
+		PO_View.checkElement(driver, "free", "//*[@id=\"tableSearchedOffers\"]/tbody/tr[1]/td[4]/div/div/span");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR24. Sobre una búsqueda determinada (a elección del desarrollador), comprar
+	// una oferta que deja un saldo 0 en el contador del comprador. Comprobar que el
+	// contador se actualiza correctamente en la vista del comprador.
+	@Test
+	public void PR24() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de buscar ofertas para comprar
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
+		elements.get(0).click();
+
+		// Realizamos una búsqueda
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+		elements.get(0).sendKeys("disco");
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
+		elements.get(0).click();
+
+		// Comprobar un producto que nos deja con saldo 0 
+		elements = PO_View.checkElement(driver, "text", "100.0");
+		elements = PO_View.checkElement(driver, "free",
+				"//*[@id=\"tableSearchedOffers\"]/tbody/tr/td[4]/div/div/button");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Comprobamos que se actualizó el saldo y que consta como vendida
+		elements = PO_View.checkElement(driver, "text", "0.0");
+		PO_View.checkElement(driver, "text", "Vendido");
+
+		// Hacemos logout
+		elements = PO_View.checkElement(driver, "@href", "/logout");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+	}
+
+	// PR25. Sobre una búsqueda determinada (a elección del desarrollador), intentar
+	// comprar una oferta que esté por encima de saldo disponible del comprador. Y
+	// comprobar que se muestra el mensaje de saldo no suficiente.
+	@Test
+	public void PR25() {
+
+		// Vamos al formulario de inicio de sesion
+		List<WebElement> elements = PO_View.checkElement(driver, "@href", "/login");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Iniciamos sesión como usuario estandar
+		PO_LoginView.fillForm(driver, "correo1@email.com", "1234567");
+
+		// Ir a la opcion de buscar ofertas para comprar
+		elements = PO_View.checkElement(driver, "id", "offers-menu");
+		elements.get(0).click();
+		elements = PO_View.checkElement(driver, "@href", "/offer/searchList");
+		elements.get(0).click();
+
+		// Realizamos una búsqueda
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/div/input");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+		elements.get(0).sendKeys("Ordenador fijo personalizado");
+		elements = PO_View.checkElement(driver, "free", "//*[@id=\"searchTextForm\"]/button");
+		elements.get(0).click();
+
+		// Intentamos comprar un producto con un precio superior a nuestro saldo
+		elements = PO_View.checkElement(driver, "text", "100.0");
+		elements = PO_View.checkElement(driver, "text", "Comprar");
+		assertTrue(elements.size() == 1);
+		elements.get(0).click();
+
+		// Comprobamos que sale el anuncio de error y que no se ve afectado el saldo del
+		// usuario
+		elements = PO_View.checkElement(driver, "class", "alert");
+		assertTrue(elements.size() == 1);
+		elements = PO_View.checkElement(driver, "text", "100.0");
+		elements = PO_View.checkElement(driver, "text", "Comprar");
+		assertTrue(elements.size() == 1);
 
 		// Hacemos logout
 		elements = PO_View.checkElement(driver, "@href", "/logout");
