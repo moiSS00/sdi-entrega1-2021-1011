@@ -7,37 +7,34 @@
 		th:fragment="userInformation" id="userInformation" />
 
 	<div class="container">
-		<h2>Lista de ofertas disponibles</h2>
+		<h2 th:text="#{nav.searchOfert}"></h2>
 		<form class="navbar-form" action="/offer/searchList"
 			id="searchTextForm">
 			<div class="form-group">
 				<input name="searchText" type="text" class="form-control" size="50"
 					placeholder="Buscar por título de la oferta">
 			</div>
-			<button type="submit" class="btn btn-default">Buscar</button>
+			<button type="submit" class="btn btn-default" th:text="#{ms.btn}"></button>
 		</form>
 		<div class="alert alert-danger" th:if="${error}">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<p>
-				<strong>¡Cuidado!</strong> Saldo insuficiente para realizar la
-				compra.
-			</p>
+			<p th:text="#{ms.error.noCash}"></p>
 		</div>
 		<div class="table-responsive">
 			<table class="table table-hover" th:fragment="tableSearchedOffers"
 				id="tableSearchedOffers">
 				<thead>
 					<tr>
-						<th>Titulo</th>
-						<th>Descripción</th>
-						<th>Precio (en €)</th>
+						<th th:text="#{ms.titulo}"></th>
+						<th th:text="#{ms.descrip}"></th>
+						<th th:text="#{ms.precio}"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="offer : ${offersList}">
-						<td th:text="${offer.title}">Título ejemplo</td>
-						<td th:text="${offer.description}">10</td>
-						<td th:text="${offer.price}">0</td>
+						<td th:text="${offer.title}"></td>
+						<td th:text="${offer.description}"></td>
+						<td th:text="${offer.price}"></td>
 						<td>
 							<div>
 								<div th:if="${offer.buyer == null}">

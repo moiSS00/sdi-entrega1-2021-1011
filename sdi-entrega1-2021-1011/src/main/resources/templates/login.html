@@ -4,31 +4,29 @@
 <body>
 	<nav th:replace="fragments/nav" />
 	<div class="container">
-		<h2>Idéntificate</h2>
+		<h2 th:text="#{ms.login.cabecera}"></h2>
 		<div class="alert alert-danger" th:if="${error}">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<p>
-				<strong>¡Cuidado!</strong> Las credenciales introducidos son incorrectas. Pruebe de nuevo.
-			</p>
+			<p th:text="#{ms.error.credenc}"></p>
 		</div>
 		<form class="form-horizontal" method="post" action="/login">
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="username">Email:</label>
+				<label class="control-label col-sm-2" for="username" th:text="#{ms.email}"></label>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" name="username"
-						placeholder="Ejemplo: prueba@corro.com" />
+						th:placeholder="#{ms.ps.email}" />
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="username">Password:</label>
+				<label class="control-label col-sm-2" for="username" th:text="#{ms.password}"></label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" name="password"
-						placeholder="Introduzca su contraseña" />
+						th:placeholder="#{ms.ps.password}" />
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-primary">Login</button>
+					<button type="submit" class="btn btn-primary" th:text="#{ms.login.btn}"></button>
 				</div>
 			</div>
 		</form>

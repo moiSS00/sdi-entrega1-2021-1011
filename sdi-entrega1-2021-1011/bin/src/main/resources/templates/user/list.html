@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head" />
+<body>
+	<nav th:replace="fragments/nav" />
+	<div th:replace="fragments/userInformation" />
+	<div class="container">
+		<h2>Lista de usuarios</h2>
+		<p>Los usuarios que actualmente figuran en el sistema son los
+			siguientes:</p>
+		<div class="table-responsive">
+			<table class="table table-hover" th:fragment="tableUsers"
+				id="tableUsers">
+				<thead>
+					<tr>
+						<th>Email</th>
+						<th>Nombre</th>
+						<th>Apellidos</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="user : ${usersList}">
+						<td th:text="${user.email}">Email ejemplo</td>
+						<td th:text="${user.name}">Nombre ejemplo</td>
+						<td th:text="${user.lastName}">Apellidos ejemplo</td>
+						<td><input type="checkbox" th:id="${'cbx' + user.id}"
+							th:value=${user.id} /></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<button type="button" id="deleteButton" class="btn btn-default">Eliminar</button>
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			$("#deleteButton").click(function() {
+				var ids = [];
+				$("input:checkbox:checked").each(function() {
+					ids.push($(this).val());
+				})
+				$("#tableUsers").load("/user/list/update/" + ids);
+			});
+			/*]]>*/
+		</script>
+	</div>
+	<footer th:replace="fragments/footer" />
+</body>
+</html>

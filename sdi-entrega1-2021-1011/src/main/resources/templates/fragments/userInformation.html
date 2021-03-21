@@ -1,18 +1,18 @@
 <div class="table-responsive" id="userInformation">
 	<div class="container">
-		<h2>Información personal del usuario</h2>
+		<h2 th:text="#{ms.userInformation.cabecera}"></h2>
 		<div class="table-responsive">
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-						<th>Email</th>
-						<th>Dinero (€)</th>
+						<th th:text="#{ms.email}"></th>
+						<th th:text="#{ms.dinero}"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td th:text="${session.registeredUser.email}">Email</td>
-						<td th:text="${session.registeredUser.amount}">0</td>
+						<td th:text="${session.registeredUser.email}"></td>
+						<td th:text="${session.registeredUser.amount}"></td>
 					</tr>
 				</tbody>
 			</table>

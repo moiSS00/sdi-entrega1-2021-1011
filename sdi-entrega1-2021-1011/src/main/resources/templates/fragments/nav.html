@@ -11,46 +11,50 @@
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
-				<li><a href="/">Home</a></li>
-				<li id="offers-menu" class="dropdown"
-					sec:authorize="hasRole('ROLE_STANDARD')"><a
-					class="dropdown-toggle" data-toggle="dropdown" href="#">
-						Gestión de ofertas <span class="caret"></span>
+				<li><a href="/" th:text="#{nav.home}">Home</a></li>
+				<li id="offers-menu" class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#" th:text="#{nav.gtsOfert}">
+						<span class="caret"></span>
 				</a>
 					<ul class="dropdown-menu">
-						<li><a href="/offer/ownedList">Lista de ofertas propias</a></li>
-						<li><a href="/offer/purchasedList">Lista de ofertas
-								compradas</a></li>
-						<li><a href="/offer/searchList">Buscar ofertas</a></li>
-						<li><a href="/offer/add">Dar de alta una oferta</a></li>
+						<li><a href="/offer/ownedList" th:text="#{nav.lOfertPropias}"></a></li>
+						<li><a href="/offer/purchasedList"
+							th:text="#{nav.lOfertCompradas}"></a></li>
+						<li><a href="/offer/searchList" th:text="#{nav.searchOfert}"></a></li>
+						<li><a href="/offer/add" th:text="#{nav.addOfert}"></a></li>
 					</ul></li>
-				<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/user/list">Lista de usuarios</a></li>
+				<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/user/list"
+					th:text="#{nav.lUser}"></a></li>
 
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a id="btnLanguage" href="#"
 					class="dropdown-toggle" data-toggle="dropdown" role="button"
-					aria-haspopup="true" aria-expanded="false"> <span></span>Idioma<span
-						class="caret"></span>
+					aria-haspopup="true" aria-expanded="false"> <span
+						th:text="#{ms.idioma}"></span> <span class="caret"></span>
 				</a>
 					<ul id="languageDropdownMenuButton" class="dropdown-menu">
 						<li><a id="btnEnglish" value="EN"> <img
 								th:src="@{/img/if_uk_flag.png}"
-								style="border: 0; float: left; margin-right: 15px" /> <span>Inglés</span>
+								style="border: 0; float: left; margin-right: 15px" /> <span
+								th:text="#{ms.ingles}"></span>
 						</a></li>
 						<li><a id="btnSpanish" value="ES"> <img
 								th:src="@{/img/if_spain_flag.png}"
-								style="border: 0; float: left; margin-right: 15px" /> <span>Español</span>
+								style="border: 0; float: left; margin-right: 15px" /> <span
+								th:text="#{ms.espanol}"></span>
 						</a></li>
 					</ul></li>
 
-				<li sec:authorize="!isAuthenticated()"><a href="/signup"> <span
-						class="glyphicon glyphicon-user"></span> Registrate
+				<li sec:authorize="!isAuthenticated()"><a href="/signup"
+				th:text="#{ms.signup}"> <span
+						class="glyphicon glyphicon-user"></span>
 				</a></li>
-				<li sec:authorize="!isAuthenticated()"><a href="/login">
-						Identifícate </a></li>
-				<li sec:authorize="isAuthenticated()"><a href="/logout"> <span
-						class="glyphicon glyphicon-log-out"></span> Desconectar
+				<li sec:authorize="!isAuthenticated()"><a href="/login"
+				th:text="#{ms.login}"></a></li>
+				<li sec:authorize="isAuthenticated()"><a href="/logout"
+				th:text="#{nav.logout}"> <span
+						class="glyphicon glyphicon-log-out"></span>
 				</a></li>
 			</ul>
 		</div>

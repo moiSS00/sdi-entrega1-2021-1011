@@ -1,0 +1,22 @@
+<div class="table-responsive" id="userInformation">
+	<div class="container">
+		<h2>Información personal del usuario</h2>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Email</th>
+						<th>Dinero (€)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td th:text="${session.registeredUser.email}">Email</td>
+						<td th:text="${session.registeredUser.amount}">0</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</div>

@@ -6,9 +6,9 @@
 	<div th:replace="fragments/userInformation" />
 
 	<div class="container" style="text-align: center">
-		<h2>¡ Bienvenido !</h2>
+		<h2 th:text="#{ms.home.wm}"></h2>
 		<img src="/img/big-logo.png" alt="logo" />
-		<h3>Disfute de MyWallapop</h3>
+		<h3 th:text="#{ms.disfute}"></h3>
 	</div>
 	<footer th:replace="fragments/footer" />
 </body>

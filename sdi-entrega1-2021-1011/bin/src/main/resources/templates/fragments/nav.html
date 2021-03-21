@@ -1,0 +1,58 @@
+<!-- nav.html -->
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#myNavbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<img src="/img/small-logo.png" alt="logo" />
+		</div>
+		<div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav" sec:authorize="isAuthenticated()">
+				<li><a href="/">Home</a></li>
+				<li id="offers-menu" class="dropdown"
+					sec:authorize="hasRole('ROLE_STANDARD')"><a
+					class="dropdown-toggle" data-toggle="dropdown" href="#">
+						Gestión de ofertas <span class="caret"></span>
+				</a>
+					<ul class="dropdown-menu">
+						<li><a href="/offer/ownedList">Lista de ofertas propias</a></li>
+						<li><a href="/offer/purchasedList">Lista de ofertas
+								compradas</a></li>
+						<li><a href="/offer/searchList">Buscar ofertas</a></li>
+						<li><a href="/offer/add">Dar de alta una oferta</a></li>
+					</ul></li>
+				<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/user/list">Lista de usuarios</a></li>
+
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown"><a id="btnLanguage" href="#"
+					class="dropdown-toggle" data-toggle="dropdown" role="button"
+					aria-haspopup="true" aria-expanded="false"> <span></span>Idioma<span
+						class="caret"></span>
+				</a>
+					<ul id="languageDropdownMenuButton" class="dropdown-menu">
+						<li><a id="btnEnglish" value="EN"> <img
+								th:src="@{/img/if_uk_flag.png}"
+								style="border: 0; float: left; margin-right: 15px" /> <span>Inglés</span>
+						</a></li>
+						<li><a id="btnSpanish" value="ES"> <img
+								th:src="@{/img/if_spain_flag.png}"
+								style="border: 0; float: left; margin-right: 15px" /> <span>Español</span>
+						</a></li>
+					</ul></li>
+
+				<li sec:authorize="!isAuthenticated()"><a href="/signup"> <span
+						class="glyphicon glyphicon-user"></span> Registrate
+				</a></li>
+				<li sec:authorize="!isAuthenticated()"><a href="/login">
+						Identifícate </a></li>
+				<li sec:authorize="isAuthenticated()"><a href="/logout"> <span
+						class="glyphicon glyphicon-log-out"></span> Desconectar
+				</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
